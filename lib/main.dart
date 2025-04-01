@@ -38,16 +38,7 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              "어찌구저찌구 블라블라~~~~~~~~",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             const SizedBox(height: 40),
-            CustomGraphic(),
             const SizedBox(height: 80),
             GestureDetector(
               onTap: () => Navigator.pushNamed(context, '/login'),
@@ -60,44 +51,6 @@ class SplashScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class CustomGraphic extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: 260,
-            height: 160,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5), // 반투명 배경
-              borderRadius: BorderRadius.circular(20), // 둥근 모서리
-            ),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.white.withOpacity(0.5),
-              ),
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.white.withOpacity(0.5),
-              ),
-            ],
-          ),
-          const Text(
-            "그래픽",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ],
       ),
     );
   }
