@@ -56,7 +56,7 @@ class MorningCallListPage extends StatelessWidget {
                       // 날짜 정보
                       const Row(
                         children: [
-                          Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                          Icon(Icons.calendar_today, size: 18, color: Color(0xFFFBC15B)),
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -71,7 +71,7 @@ class MorningCallListPage extends StatelessWidget {
                       // 시간 정보
                       const Row(
                         children: [
-                          Icon(Icons.access_time, size: 16, color: Colors.grey),
+                          Icon(Icons.access_time, size: 18, color: Color(0xFFFBC15B)),
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -86,7 +86,7 @@ class MorningCallListPage extends StatelessWidget {
                       // 사유 정보
                       const Row(
                         children: [
-                          Icon(Icons.note, size: 16, color: Colors.grey),
+                          Icon(Icons.star, size: 18, color: Color(0xFFFBC15B)),
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -126,11 +126,11 @@ class MorningCallListPage extends StatelessWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            foregroundColor: Colors.white,
+                            backgroundColor: Color(0xFFD9D9D9),
+                            foregroundColor: Color(0xFFCA8916),
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                           ),
-                          icon: const Icon(Icons.alarm, size: 16),
+                          icon: const Icon(Icons.alarm, size: 18),
                           label: const Text(
                             '깨워주기',
                             style: TextStyle(fontSize: 14),
@@ -163,15 +163,25 @@ class MorningCallListPage extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/morning_call_request');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
+                child: SizedBox(
+                  width: 232,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/morning_call/request');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFB0B0B0),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        side: BorderSide.none,
+                      ),
+                    ),
+                    child: const Text('모닝콜 요청'),
                   ),
-                  child: const Text('모닝콜 요청하기'),
                 ),
               ),
             ),
