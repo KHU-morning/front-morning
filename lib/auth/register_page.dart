@@ -8,37 +8,13 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _collegeController = TextEditingController();
-  final _departmentController = TextEditingController();
-  final _nameController = TextEditingController();
-  final _idController = TextEditingController();
-  bool _isCollegeDropdownOpen = false;
-  bool _isDepartmentDropdownOpen = false;
-  bool _isIdChecked = false;
-
-  bool get _isFormValid => 
-    _collegeController.text.isNotEmpty &&
-    _departmentController.text.isNotEmpty &&
-    _nameController.text.isNotEmpty;
-
-  @override
-  void initState() {
-    super.initState();
-    _collegeController.addListener(_onFieldChanged);
-    _departmentController.addListener(_onFieldChanged);
-    _nameController.addListener(_onFieldChanged);
-  }
-
-  void _onFieldChanged() {
-    setState(() {});
-  }
+  final TextEditingController _collegeController = TextEditingController();
+  final TextEditingController _departmentController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
 
   @override
   void dispose() {
-    _collegeController.removeListener(_onFieldChanged);
-    _departmentController.removeListener(_onFieldChanged);
-    _nameController.removeListener(_onFieldChanged);
     _collegeController.dispose();
     _departmentController.dispose();
     _nameController.dispose();
@@ -46,424 +22,347 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
+  bool get _isFormValid =>
+      _collegeController.text.isNotEmpty &&
+      _departmentController.text.isNotEmpty &&
+      _nameController.text.isNotEmpty &&
+      _idController.text.isNotEmpty;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('회원가입'),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: Colors.white,
         foregroundColor: Colors.black,
+        elevation: 0,
       ),
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(height: 32),
+                      // 단과대학 선택
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('단과대학'),
+                          const Text(
+                            '단과대학',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: _collegeController,
                             readOnly: true,
-                            style: TextStyle(fontSize: 12),
-                            decoration: InputDecoration(
-                                hintText: '소속 단과대학을 선택해주세요',
-                                hintStyle: TextStyle(color: Colors.grey[600], fontSize: 11.5),
-                              isDense: true,
-                                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              suffix: IconButton(
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                                visualDensity: VisualDensity.compact,
-                                onPressed: () {
-                                  setState(() {
-                                    _isCollegeDropdownOpen = !_isCollegeDropdownOpen;
-                                  });
-                                },
-                                icon: Transform.rotate(
-                                  angle: _isCollegeDropdownOpen ? 0 : 3.14159,
-                                  child: Icon(
-                                    Icons.arrow_drop_down,
-                                    color: Colors.grey,
-                                    size: 20,
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('단과대학 선택'),
+                                  content: SizedBox(
+                                    width: double.maxFinite,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: 10, // 임시 데이터
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          title: Text('단과대학 ${index + 1}'),
+                                          onTap: () {
+                                            setState(() {
+                                              _collegeController.text = '단과대학 ${index + 1}';
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
+                              );
+                            },
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              hintText: '소속 단과대학을 선택해주세요',
+                              hintStyle: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
                               ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
+                              suffixIcon: _collegeController.text.isNotEmpty
+                                  ? IconButton(
+                                      icon: const Icon(Icons.clear, size: 18),
+                                      onPressed: () {
+                                        setState(() {
+                                          _collegeController.clear();
+                                        });
+                                      },
+                                    )
+                                  : const Icon(Icons.arrow_drop_down, size: 18),
                             ),
+                            onChanged: (value) => setState(() {}),
                           ),
                         ],
                       ),
-                      if (_isCollegeDropdownOpen) ...[
-                        Container(
-                          margin: EdgeInsets.only(top: 4),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            children: [
-                              ListTile(
-                                title: Text('공과대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '공과대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('자연과학대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '자연과학대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('인문대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '인문대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('사회과학대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '사회과학대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('경영대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '경영대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('예술체육대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '예술체육대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('의과대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '의과대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('치과대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '치과대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('한의과대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '한의과대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('약학대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '약학대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('간호대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '간호대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('교육대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '교육대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('융합공학대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '융합공학대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('소프트웨어융합대학'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '소프트웨어융합대학';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('자유전공학부'),
-                                onTap: () {
-                                  setState(() {
-                                    _collegeController.text = '자유전공학부';
-                                    _isCollegeDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
                       const SizedBox(height: 16),
+                      // 학과 선택
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('학과'),
+                          const Text(
+                            '학과',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: _departmentController,
                             readOnly: true,
-                            style: TextStyle(fontSize: 12),
-                            decoration: InputDecoration(
-                              hintText: '소속 학과를 선택해주세요',
-                              hintStyle: TextStyle(color: Colors.grey[600], fontSize: 11.5),
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              suffix: IconButton(
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                                visualDensity: VisualDensity.compact,
-                                onPressed: () {
-                                  setState(() {
-                                    _isDepartmentDropdownOpen = !_isDepartmentDropdownOpen;
-                                  });
-                                },
-                                icon: Transform.rotate(
-                                  angle: _isDepartmentDropdownOpen ? 0 : 3.14159,
-                                  child: Icon(
-                                    Icons.arrow_drop_down,
-                                    color: Colors.grey,
-                                    size: 20,
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('학과 선택'),
+                                  content: SizedBox(
+                                    width: double.maxFinite,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: 10, // 임시 데이터
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          title: Text('학과 ${index + 1}'),
+                                          onTap: () {
+                                            setState(() {
+                                              _departmentController.text = '학과 ${index + 1}';
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
+                              );
+                            },
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              hintText: '소속 학과를 선택해주세요',
+                              hintStyle: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
                               ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
+                              suffixIcon: _departmentController.text.isNotEmpty
+                                  ? IconButton(
+                                      icon: const Icon(Icons.clear, size: 18),
+                                      onPressed: () {
+                                        setState(() {
+                                          _departmentController.clear();
+                                        });
+                                      },
+                                    )
+                                  : const Icon(Icons.arrow_drop_down, size: 18),
                             ),
+                            onChanged: (value) => setState(() {}),
                           ),
                         ],
                       ),
-                      if (_isDepartmentDropdownOpen) ...[
-                        Container(
-                          margin: EdgeInsets.only(top: 4),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            children: [
-                              ListTile(
-                                title: Text('컴퓨터공학과'),
-                                onTap: () {
-                                  setState(() {
-                                    _departmentController.text = '컴퓨터공학과';
-                                    _isDepartmentDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text('전자공학과'),
-                                onTap: () {
-                                  setState(() {
-                                    _departmentController.text = '전자공학과';
-                                    _isDepartmentDropdownOpen = false;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
                       const SizedBox(height: 16),
+                      // 이름 입력
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('이름'),
+                          const Text(
+                            '이름',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: _nameController,
-                            style: TextStyle(fontSize: 12),
                             decoration: InputDecoration(
-                              hintText: '이름을 입력해주세요',
-                              hintStyle: TextStyle(color: Color(0xFFB6B6B6), fontSize: 11.5),
                               isDense: true,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                              filled: true,
-                              fillColor: Color(0xFFEEEEEE),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
+                              hintText: '이름을 입력해주세요',
+                              hintStyle: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide.none,
+                                borderSide: const BorderSide(color: Colors.grey),
                               ),
-                              suffix: IconButton(
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                                visualDensity: VisualDensity.compact,
-                                onPressed: () {
-                                  _nameController.clear();
-                                },
-                                icon: Icon(Icons.cancel, size: 18, color: Colors.grey),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.grey),
                               ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
+                              suffixIcon: _nameController.text.isNotEmpty
+                                  ? IconButton(
+                                      icon: const Icon(Icons.clear, size: 18),
+                                      onPressed: () {
+                                        setState(() {
+                                          _nameController.clear();
+                                        });
+                                      },
+                                    )
+                                  : null,
                             ),
+                            onChanged: (value) => setState(() {}),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
+                      // 아이디 입력
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('아이디'),
+                          const Text(
+                            '아이디',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: _idController,
-                            style: TextStyle(fontSize: 12),
                             decoration: InputDecoration(
-                              hintText: '아이디를 입력해주세요',
-                              hintStyle: TextStyle(color: Color(0xFFB6B6B6), fontSize: 11.5),
                               isDense: true,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                              filled: true,
-                              fillColor: Color(0xFFEEEEEE),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
+                              hintText: '아이디를 입력해주세요',
+                              hintStyle: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide.none,
+                                borderSide: const BorderSide(color: Colors.grey),
                               ),
-                              suffix: Container(
-                                margin: EdgeInsets.zero,
-                                child: _isIdChecked
-                                  ? Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFB0B0B0),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Center(
-                                        child: Icon(Icons.check_circle, size: 18, color: Colors.white),
-                                      ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
+                              suffixIcon: _idController.text.isNotEmpty
+                                  ? IconButton(
+                                      icon: const Icon(Icons.clear, size: 18),
+                                      onPressed: () {
+                                        setState(() {
+                                          _idController.clear();
+                                        });
+                                      },
                                     )
-                                  : ElevatedButton(
-                                      onPressed: null,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color(0xFFB0B0B0),
-                                        foregroundColor: Colors.white,
-                                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(6),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        '중복확인',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                              ),
+                                  : null,
                             ),
+                            onChanged: (value) => setState(() {}),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
               ),
             ),
+            // 하단 버튼 영역
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 4,
-                    offset: Offset(0, -2),
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: const Offset(0, -1),
                   ),
                 ],
               ),
               child: Column(
                 children: [
+                  // 가입하기 버튼
                   SizedBox(
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: _isFormValid ? () {
-                        // TODO: Implement registration logic
-                        Navigator.pushReplacementNamed(context, '/home');
-                      } : null,
+                      onPressed: _isFormValid
+                          ? () {
+                              Navigator.pushReplacementNamed(context, '/morning_call');
+                            }
+                          : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: _isFormValid ? Color(0xFFB0B0B0) : Color(0xFFEEEEEE),
-                        foregroundColor: _isFormValid ? Colors.black : Color(0xFFB6B6B6),
+                        backgroundColor: const Color(0xFFB0B0B0),
+                        foregroundColor: Colors.white,
+                        disabledBackgroundColor: Colors.grey[300],
                         elevation: 0,
-                        shadowColor: Colors.transparent,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                          side: BorderSide.none,
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text('가입하기'),
+                      child: const Text(
+                        '가입하기',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                  // 로그인 버튼
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                     child: const Text('이미 계정이 있으신가요? 로그인'),
                   ),
-                ],
+              )],
               ),
             ),
           ],

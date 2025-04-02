@@ -92,27 +92,27 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             decoration: InputDecoration(
                               isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                               hintText: '소속 단과대학을 선택해주세요',
-                              hintStyle: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
+                                hintStyle: const TextStyle(
+                                fontSize: 13,
+                                color: Color.fromRGBO(82, 82, 82, 1),
                               ),
-                              border: OutlineInputBorder(
+                                border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey),
+                                borderSide: const BorderSide(color: Color.fromRGBO(182, 182, 182, 1)),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey),
+                                borderSide: const BorderSide(color: Color.fromRGBO(182, 182, 182, 1)),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey),
+                                borderSide: const BorderSide(color: Color.fromRGBO(182, 182, 182, 1)),
                               ),
                               suffixIcon: _collegeController.text.isNotEmpty
                                   ? IconButton(
-                                      icon: const Icon(Icons.clear, size: 18),
+                                      icon: const Icon(Icons.clear, size: 18, color: Color.fromRGBO(182, 182, 182, 1)),
                                       onPressed: () {
                                         setState(() {
                                           _collegeController.clear();
@@ -169,11 +169,11 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             decoration: InputDecoration(
                               isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                               hintText: '소속 학과를 선택해주세요',
                               hintStyle: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
+                                fontSize: 13,
+                                color: Color.fromRGBO(82, 82, 82, 1),
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -219,24 +219,26 @@ class _LoginPageState extends State<LoginPage> {
                             controller: _nameController,
                             decoration: InputDecoration(
                               isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                               hintText: '이름을 입력해주세요',
                               hintStyle: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
+                                fontSize: 13,
+                                color: Color.fromRGBO(182, 182, 182, 1),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
+                                ),
+                                fillColor: const Color.fromRGBO(238, 238, 238, 1),
+                                filled: true,
                               suffixIcon: _nameController.text.isNotEmpty
                                   ? IconButton(
                                       icon: const Icon(Icons.clear, size: 18),
@@ -260,7 +262,7 @@ class _LoginPageState extends State<LoginPage> {
                           const Text(
                             '아이디',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -269,24 +271,26 @@ class _LoginPageState extends State<LoginPage> {
                             controller: _idController,
                             decoration: InputDecoration(
                               isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                               hintText: '아이디를 입력해주세요',
                               hintStyle: const TextStyle(
                                 fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
+                                color: Color.fromRGBO(182, 182, 182, 1),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
+                                ),
+                                fillColor: const Color.fromRGBO(238, 238, 238, 1),
+                                filled: true,
                               suffixIcon: _idController.text.isNotEmpty
                                   ? IconButton(
                                       icon: const Icon(Icons.clear, size: 18),
@@ -324,33 +328,34 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: [
                   // 로그인 버튼
-                  SizedBox(
+                    SizedBox(
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
                       onPressed: _isFormValid
-                          ? () {
-                              Navigator.pushReplacementNamed(context, '/morning_call');
-                            }
-                          : null,
+                        ? () {
+                            Navigator.pushReplacementNamed(context, '/home');
+                        }
+                        : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFB0B0B0),
-                        foregroundColor: Colors.white,
-                        disabledBackgroundColor: Colors.grey[300],
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                      backgroundColor: const Color(0xFFFBC15B),
+                      foregroundColor: Colors.white,
+                      disabledBackgroundColor: Colors.grey[300],
+                      elevation: 0, // 그림자 효과 제거
+                      shadowColor: Colors.transparent, // 그림자 색상 제거
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(200),
+                      ),
                       ),
                       child: const Text(
-                        '로그인',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      '로그인',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                       ),
                     ),
-                  ),
+                    ),
                   const SizedBox(height: 16),
                   // 회원가입 버튼
                   SizedBox(
