@@ -102,7 +102,6 @@ class _CalendarSheetState extends State<CalendarSheet> {
               onPressed: () {
                 if (_selectedDay != null) {
                   widget.onDateSelected(_selectedDay!);
-                  Navigator.pop(context);
                 }
               },
               style: ElevatedButton.styleFrom(
