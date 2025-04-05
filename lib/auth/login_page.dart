@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../data/login.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -55,7 +57,8 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 32),
                       buildTextField('아이디', _idController, '아이디를 입력해주세요.'),
                       const SizedBox(height: 16),
-                      buildTextField('비밀번호', _passwordController, '비밀번호를 입력해주세요.', true),
+                      buildTextField(
+                          '비밀번호', _passwordController, '비밀번호를 입력해주세요.', true),
                     ],
                   ),
                 ),
@@ -80,7 +83,13 @@ class _LoginPageState extends State<LoginPage> {
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: _isFormValid ? _handleLogin : null,
+                      onPressed: _isFormValid
+                          ? () => handleLogin(
+                                context: context,
+                                username: _idController.text,
+                                password: _passwordController.text,
+                              )
+                          : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFBC15B),
                         foregroundColor: Colors.white,
@@ -93,7 +102,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: const Text(
                         '로그인',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -108,7 +118,8 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextButton.styleFrom(foregroundColor: Colors.grey),
                       child: const Text(
                         '회원가입',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -121,55 +132,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // 로그인 API 호출 처리 함수
-  Future<void> _handleLogin() async {
-    try {
-      final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/token'), // 웹 환경이면 localhost도 OK
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: {
-          'username': _idController.text,
-          'password': _passwordController.text,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final token = jsonDecode(response.body)['access_token'];
-        print('로그인 성공! 토큰: $token');
-        Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('로그인 실패'),
-            content: const Text('아이디 또는 비밀번호가 잘못되었습니다.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('확인'),
-              ),
-            ],
-          ),
-        );
-      }
-    } catch (e) {
-      print('로그인 요청 실패: $e');
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('오류'),
-          content: const Text('서버에 연결할 수 없습니다.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('확인'),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
   Widget buildTextField(
     String label,
     TextEditingController controller,
@@ -179,16 +141,19 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        Text(label,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
             isDense: true,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
             hintText: hint,
-            hintStyle: const TextStyle(fontSize: 13, color: Color.fromRGBO(182, 182, 182, 1)),
+            hintStyle: const TextStyle(
+                fontSize: 13, color: Color.fromRGBO(182, 182, 182, 1)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,
