@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../api/login.dart';
+
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -10,38 +13,28 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _departmentController = TextEditingController();
-  final TextEditingController _studentIdController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _idController = TextEditingController();
 
   @override
   void dispose() {
-    _phoneController.dispose();
-    _departmentController.dispose();
-    _studentIdController.dispose();
-    _nameController.dispose();
+    _passwordController.dispose();
     _idController.dispose();
     super.dispose();
   }
 
   bool get _isFormValid =>
-      _phoneController.text.isNotEmpty &&
-      _departmentController.text.isNotEmpty &&
-      _studentIdController.text.isNotEmpty &&
-      _nameController.text.isNotEmpty &&
-      _idController.text.isNotEmpty;
+      _passwordController.text.isNotEmpty && _idController.text.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           '로그인',
           style: TextStyle(
-            color: const Color(0xFF171717),
+            color: Color(0xFF171717),
             fontSize: 18,
             fontWeight: FontWeight.w500,
             height: 1.0,
@@ -63,15 +56,10 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 32),
-                      buildTextField('휴대폰 번호', _phoneController, '휴대폰 번호를 입력해주세요.', TextInputType.phone),
-                      const SizedBox(height: 16),
-                      buildTextField('학과', _departmentController, '소속 학과를 입력해주세요.'),
-                      const SizedBox(height: 16),
-                      buildTextField('학번', _studentIdController, '학번을 입력해주세요.', TextInputType.number),
-                      const SizedBox(height: 16),
-                      buildTextField('이름', _nameController, '이름을 입력해주세요.'),
-                      const SizedBox(height: 16),
                       buildTextField('아이디', _idController, '아이디를 입력해주세요.'),
+                      const SizedBox(height: 16),
+                      buildTextField(
+                          '비밀번호', _passwordController, '비밀번호를 입력해주세요.', true),
                     ],
                   ),
                 ),
@@ -97,36 +85,11 @@ class _LoginPageState extends State<LoginPage> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: _isFormValid
-                          ? () async {
-                              final response = await http.post(
-                                Uri.parse('http://127.0.0.1:8000/token'),
-                                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                                body: {
-                                  'username': _idController.text,
-                                  'password': _nameController.text,
-                                },
-                              );
-
-                              if (response.statusCode == 200) {
-                                final token = jsonDecode(response.body)['access_token'];
-                                print('로그인 성공! 토큰: $token');
-                                Navigator.pushReplacementNamed(context, '/home');
-                              } else {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: const Text('로그인 실패'),
-                                    content: const Text('아이디 또는 이름(비밀번호)이 잘못되었습니다.'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: const Text('확인'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-                            }
+                          ? () => handleLogin(
+                                context: context,
+                                username: _idController.text,
+                                password: _passwordController.text,
+                              )
                           : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFBC15B),
@@ -140,7 +103,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: const Text(
                         '로그인',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -155,7 +119,8 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextButton.styleFrom(foregroundColor: Colors.grey),
                       child: const Text(
                         '회원가입',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -168,20 +133,28 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget buildTextField(String label, TextEditingController controller, String hint, [TextInputType type = TextInputType.text]) {
+  Widget buildTextField(
+    String label,
+    TextEditingController controller,
+    String hint, [
+    bool obscureText = false,
+  ]) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        Text(label,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
-          keyboardType: type,
+          obscureText: obscureText,
           decoration: InputDecoration(
             isDense: true,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
             hintText: hint,
-            hintStyle: const TextStyle(fontSize: 13, color: Color.fromRGBO(182, 182, 182, 1)),
+            hintStyle: const TextStyle(
+                fontSize: 13, color: Color.fromRGBO(182, 182, 182, 1)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,

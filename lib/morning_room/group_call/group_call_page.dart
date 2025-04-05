@@ -6,12 +6,6 @@ class GroupCallPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dummyParticipants = [
-      'assets/img1.png',
-      'assets/img2.png',
-      'assets/img3.png',
-      'assets/img4.png',
-    ];
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFF3B0),
@@ -34,25 +28,21 @@ class GroupCallPage extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Image.asset('assets/alarm_clock.png'), // 알람 이미지
-                  const CircleAvatar(
-                    radius: 24,
-                    backgroundImage: AssetImage('assets/profile.png'),
-                  )
+                  Image.asset('assets/img/getup.svg'), // 알람 이미지
                 ],
               ),
             ),
             const SizedBox(height: 20),
-            Text('현재 ${dummyParticipants.length}/6명 참여'),
+            Text('현재 0/3명 참여'),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(dummyParticipants.length, (index) {
+                children: List.generate(6, (index) {
                   return Positioned(
                     left: index * 24, // 겹침 간격 조절 (작을수록 더 많이 겹침)
                     child: CircleAvatar(
                       radius: 20,
-                      backgroundImage: AssetImage(dummyParticipants[index]),
+                      backgroundImage: const AssetImage('assets/img/profile_placeholder.png'),
                     ),
                   );
                 }),
@@ -98,11 +88,11 @@ class _InCallPageState extends State<InCallPage> {
   late Timer _timer;
 
   final participants = [
-    {"name": "Moondae123", "image": "assets/profile1.png"},
-    {"name": "yurimS2", "image": "assets/profile2.png"},
-    {"name": "jegalhhh", "image": "assets/profile3.png"},
-    {"name": "RYO", "image": "assets/profile4.png"},
-    {"name": "zoozoo08", "image": "assets/profile5.png"},
+    {"name": "Moondae123", "image": "assets/img/qorjiwon.png"},
+    {"name": "yurimS2", "image": "assets/img/qorjiwon.png"},
+    {"name": "jegalhhh", "image": "assets/img/qorjiwon.png"},
+    {"name": "RYO", "image": "assets/img/qorjiwon.png"},
+    {"name": "zoozoo08", "image": "assets/img/qorjiwon.png"},
   ];
 
   @override
