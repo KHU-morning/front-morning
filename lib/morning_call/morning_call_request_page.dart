@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import '../data/wake_request.dart';
 import '../widgets/calendar_sheet.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class MorningCallRequestPage extends StatefulWidget {
   const MorningCallRequestPage({super.key});
@@ -247,10 +252,33 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
                                   color: const Color(0xFFE0E0E0)),
                               Expanded(
                                 child: InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    // 여기에 실제 모닝콜 요청 API 또는 다음 로직
-                                  },
+                                  onTap: () async {
+                                  Navigator.pop(context); // 다이얼로그 닫기
+
+                                  final wakeDate =
+                                      '${selectedDate.year.toString().padLeft(4, '0')}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}';
+                                  final wakeTime =
+                                      '${(period == 'PM' && selectedHour != 12 ? selectedHour + 12 : selectedHour == 12 && period == 'AM' ? 0 : selectedHour).toString().padLeft(2, '0')}:${selectedMinute.toString().padLeft(2, '0')}';
+
+                                  final success = await createWakeRequest(
+                                    wakeDate: wakeDate,
+                                    wakeTime: wakeTime,
+                                    reason: _reasonController.text,
+                                    isPublic: isPublic,
+                                  );
+
+                                  if (success) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text('모닝콜 요청이 등록되었습니다.')),
+                                    );
+                                    Navigator.pop(context); // 이전 페이지로
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text('요청에 실패했습니다.')),
+                                    );
+                                  }},
                                   child: Container(
                                     height: 48,
                                     alignment: Alignment.center,
