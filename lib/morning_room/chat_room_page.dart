@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './group_call/group_call_page.dart';
+import './chat_room_info.dart';
 
 class ChatRoomPage extends StatelessWidget {
   final String roomId;
@@ -65,7 +66,26 @@ class ChatRoomPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 300),
+                  pageBuilder: (_, __, ___) => const RoomInfoPage(),
+                  transitionsBuilder: (_, animation, __, child) {
+                    final offsetAnimation = Tween<Offset>(
+                      begin: const Offset(1.0, 0.0), // 👉 오른쪽에서 시작
+                      end: Offset.zero,
+                    ).animate(animation);
+
+                    return SlideTransition(position: offsetAnimation, child: child);
+                  },
+                ),
+              );
+            },
+            icon: const Icon(Icons.menu)
+          ),
         ],
       ),
       body: Column(
@@ -112,15 +132,25 @@ class ChatRoomPage extends StatelessWidget {
         ],
       ),
       // ✅ 디버깅용 플로팅 버튼
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.orange,
-        child: const Icon(Icons.phone),
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const GroupCallPage()),
-          );
-        },
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 80),
+        child: FloatingActionButton(
+          backgroundColor: Colors.orange,
+            child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.phone),
+              SizedBox(height: 4),
+              Text('디버깅용', style: TextStyle(fontSize: 10)),
+              ],
+            ),
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const GroupCallPage()),
+            );
+          },
+        )
       ),
     );
   }
@@ -198,39 +228,43 @@ class ChatRoomPage extends StatelessWidget {
 
   Widget _buildInputArea(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       color: Colors.white,
-      child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  hintText: '메시지를 입력해주세요',
-                  filled: true,
-                  fillColor: const Color(0xFFF2F2F2),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide.none,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        child: SafeArea(
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    hintText: '메시지를 입력해주세요',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    filled: true,
+                    fillColor: const Color(0xFFF2F2F2),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide.none,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFFFB74D),
+              const SizedBox(width: 8),
+              Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFFFB74D),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_upward, color: Colors.white),
+                  onPressed: () {
+                    // TODO: 보내기 기능
+                  },
+                ),
               ),
-              child: IconButton(
-                icon: const Icon(Icons.arrow_upward, color: Colors.white),
-                onPressed: () {
-                  // TODO: 보내기 기능
-                },
-              ),
-            )
-          ],
+            ],
+          ), 
         ),
       ),
     );

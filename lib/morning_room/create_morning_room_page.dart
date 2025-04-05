@@ -148,11 +148,12 @@ class _CreateMorningRoomPageState extends State<CreateMorningRoomPage> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('이대로 모닝방을 생성하시겠어요?', 
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        content: Text(
-          '공개 여부: ${isPublic ? "공개" : "비공개"}\n'
-          '날짜 및 시간: ${DateFormat('yyyy.MM.dd (E) HH:mm', 'ko_KR').format(selectedDate)}\n'
-          '목표: ${_goalController.text}',
-        ),
+        content: 
+            Text(
+              '공개 여부: ${isPublic ? "공개" : "비공개"}\n'
+              '날짜 및 시간: ${DateFormat('yyyy.MM.dd (E) HH:mm', 'ko_KR').format(selectedDate)}\n'
+              '목표: ${_goalController.text}',
+            ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -241,12 +242,14 @@ class _CreateMorningRoomPageState extends State<CreateMorningRoomPage> {
       },
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: const Text('모닝방 생성'),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
         ),
+        backgroundColor: const Color(0xFFF7F7F7),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -277,6 +280,7 @@ class _CreateMorningRoomPageState extends State<CreateMorningRoomPage> {
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey.shade300),
                       borderRadius: BorderRadius.circular(12),
+                      color: Colors.white,
                     ),
                     child: Row(
                       children: [
@@ -295,6 +299,7 @@ class _CreateMorningRoomPageState extends State<CreateMorningRoomPage> {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
                   ),
                   child: _buildTimeSelector(),
                 ),
@@ -306,6 +311,7 @@ class _CreateMorningRoomPageState extends State<CreateMorningRoomPage> {
                   maxLength: 28,
                   decoration: InputDecoration(
                     hintText: '세모토 우승하기!',
+                    fillColor: Colors.grey.shade300,
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.clear),
                       onPressed: () => _goalController.clear(),
@@ -315,6 +321,11 @@ class _CreateMorningRoomPageState extends State<CreateMorningRoomPage> {
                     ),
                     counterText: '',
                   ),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  '공백 포함 28자 이내',
+                  style: TextStyle(color: Colors.grey, fontSize: 10),
                 ),
                 const Spacer(),
                 SizedBox(
@@ -350,7 +361,7 @@ class _CreateMorningRoomPageState extends State<CreateMorningRoomPage> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFFFFF0B2) : Colors.white,
+            color: isSelected ? const Color(0xFFFFF0B2) : Colors.grey.shade300,
             border: Border.all(color: Colors.grey.shade300),
             borderRadius: BorderRadius.circular(12),
           ),
