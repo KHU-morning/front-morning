@@ -31,11 +31,14 @@ class _MyPageScreenState extends State<MyPageScreen> {
   Future<void> _loadMyPageData() async {
     try {
       final profileData = await fetchMyProfile(); // 이름 변경된 함수 사용
-      final wakeDates = await fetchMyWakeSummary();
+      final wakeSummary = await fetchMyWakeSummary();
 
       setState(() {
         profile = profileData;
-        successDates = wakeDates.cast<String>();
+        successDates = wakeSummary
+            .where((e) => e['success'] == true)
+            .map<String>((e) => e['date'])
+            .toList();
       });
     } catch (e) {
       print('마이페이지 데이터 불러오기 실패: $e');
@@ -93,7 +96,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
                     Text(
                       profile?['username'] ?? '',
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16, fontFamily: 'SpoqaHanSans'),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          fontFamily: 'SpoqaHanSans'),
                     ),
                     Text(
                       '${profile?['name']}  ${profile?['department']}',
