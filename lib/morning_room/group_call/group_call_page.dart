@@ -31,25 +31,22 @@ class GroupCallPage extends StatelessWidget {
               height: 150,
               child: Stack(
                 alignment: Alignment.center,
-                children: [
-                  Image.asset('img/get_up.svg'), // 알람 이미지
-                ],
               ),
             ),
             const SizedBox(height: 20),
-            Text('현재 0/3명 참여'),
+            Text('현재 1/5명 참여'),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (index) {
-                return const Padding(
+              children: [
+                const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 4),
                   child: CircleAvatar(
                     radius: 20,
                     backgroundImage: AssetImage('assets/img/qorjiwon.png'),
                   ),
-                );
-              }),
+                ),
+              ],
             ),
             const SizedBox(height: 32),
             ElevatedButton.icon(
@@ -184,8 +181,11 @@ class _InCallPageState extends State<InCallPage> {
                 }).toList(),
               ),
               const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
+                ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFFB74D),
                   foregroundColor: Colors.white,
@@ -195,7 +195,7 @@ class _InCallPageState extends State<InCallPage> {
                   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   child: Text('확인'),
                 ),
-              )
+                )
             ],
           ),
         ),
@@ -212,7 +212,7 @@ class _InCallPageState extends State<InCallPage> {
           children: [
             const SizedBox(height: 32),
             Text(
-              '2/3명 참여',
+              '2/5명 참여',
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             const SizedBox(height: 8),
