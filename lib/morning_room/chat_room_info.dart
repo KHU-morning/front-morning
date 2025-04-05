@@ -6,12 +6,12 @@ class RoomInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final friends = [
-      {"name": "Moondae123", "label": "(방장)", "image": "assets/profile1.png"},
-      {"name": "zoozoo08", "label": "(나)", "image": "assets/profile2.png"},
-      {"name": "RYO", "label": "", "image": "assets/profile3.png"},
-      {"name": "jegalhhh", "label": "", "image": "assets/profile4.png"},
-      {"name": "IAMSLEEPY", "label": "", "image": "assets/profile5.png"},
-      {"name": "yurimS2", "label": "", "image": "assets/profile6.png"},
+      {"name": "Moondae123", "label": "(방장)", "image": "assets/img/default_profile.png"},
+      {"name": "zoozoo08", "label": "(나)", "image": "assets/img/default_profile.png"},
+      {"name": "RYO", "label": "", "image": "assets/img/default_profile.png"},
+      {"name": "jegalhhh", "label": "", "image": "assets/img/default_profile.png"},
+      {"name": "IAMSLEEPY", "label": "", "image": "assets/img/default_profile.png"},
+      {"name": "yurimS2", "label": "", "image": "assets/img/default_profile.png"},
     ];
 
   // 친구 초대 팝업
@@ -45,7 +45,7 @@ class RoomInfoPage extends StatelessWidget {
                       title: Row(
                         children: [
                           const CircleAvatar(
-                            child: Icon(Icons.person, color: Colors.white, size: 20),
+                            backgroundImage: AssetImage('assets/img/img/default_profile.png'),
                             radius: 12,
                             backgroundColor: Color(0xFFF8EEAC),
                           ),
