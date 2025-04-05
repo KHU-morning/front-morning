@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../morning_call/morning_call_list_page.dart';
+import '../morning_room/morning_room_page.dart';
 import '../mypage/my_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,7 +15,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _pages = [
     const MorningCallListPage(),
-    const Center(child: Text('모닝방')),  // 임시 페이지
+    const MorningRoomPage(),
     const MyPageScreen(),
   ];
 

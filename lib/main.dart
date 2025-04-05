@@ -6,9 +6,9 @@ import 'home/home_page.dart';
 import 'morning_call/morning_call_request_page.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // 꼭 있어야 함
-  await initializeDateFormatting('ko_KR', null); // ✅ 날짜 포맷 로케일 초기화
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // 비동기 작업 전에 필수!
+  await initializeDateFormatting('ko_KR', null);
   runApp(const MyApp());
 }
 
