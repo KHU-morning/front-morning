@@ -73,6 +73,7 @@ class _MorningCallListPageState extends State<MorningCallListPage> {
                         final date = req['wake_date'];
                         final time = req['wake_time'];
                         final reason = req['reason'];
+                        final is_public = req['is_public'];
 
                         return Card(
                           color: Colors.white,
@@ -128,7 +129,7 @@ class _MorningCallListPageState extends State<MorningCallListPage> {
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
-                                        reason,
+                                        is_public? reason : '비공개입니다',
                                         style: const TextStyle(fontSize: 14),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
