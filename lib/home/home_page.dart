@@ -15,7 +15,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     const MorningCallListPage(),
     const Center(child: Text('모닝방')),  // 임시 페이지
-    const MyPage(),
+    const MyPageScreen(),
   ];
 
   @override
