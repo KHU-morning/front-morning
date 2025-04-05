@@ -5,7 +5,7 @@ import 'chat_room_page.dart';
 class MorningRoomPage extends StatelessWidget {
   const MorningRoomPage({super.key});
 
-  final bool hasJoinedRoom = true; // 참여 중인 모닝방 여부 (테스트 시 true/false 바꿔보면 됨)
+  final bool hasJoinedRoom = false; // 참여 중인 모닝방 여부 (테스트 시 true/false 바꿔보면 됨)
 
   void _navigateToCreateRoom(BuildContext context) {
     Navigator.push(
@@ -35,7 +35,31 @@ class MorningRoomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F6F6),
+      backgroundColor: const Color(0xFFF7F7F7),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SizedBox(
+        width: 200, // 원하는 버튼 너비
+        height: 48,
+        child: ElevatedButton(
+          onPressed: () => hasJoinedRoom
+              ? _showNoOverlappingRoomDialog(context)
+              : _navigateToCreateRoom(context),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: hasJoinedRoom
+                ? const Color(0xFFB0B0B0)
+                : const Color(0xFFFBC15B),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+          ),
+          child: const Text(
+            '모닝방 생성',
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+      ),
+
       body: SafeArea(
         child: Column(
           children: [
@@ -90,27 +114,7 @@ class MorningRoomPage extends StatelessWidget {
                     hasJoinedRoom: hasJoinedRoom,
                   ),
                   const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: () => hasJoinedRoom
-                      ? _showNoOverlappingRoomDialog(context) // 참여 중인 모닝방이 있으면 버튼 비활성화
-                      : _navigateToCreateRoom(context), // 참여 중인 모닝방이 없으면 버튼 활성화
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: hasJoinedRoom
-                            ? const Color(0xFFBDBDBD) // 회색 (참여 중이면 비활성화)
-                            : const Color(0xFFFFB74D), // 오렌지
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                      ),
-                      child: const Text(
-                        '모닝방 생성',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+                  
                   const SizedBox(height: 16),
                 ],
               ),
@@ -159,6 +163,7 @@ class MorningRoomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 2,
@@ -189,21 +194,27 @@ class MorningRoomCard extends StatelessWidget {
                 Text(time),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(description),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Icon(Icons.star, size: 16, color: Colors.orange),
+                const SizedBox(width: 4),
+                Text(description),
+              ],
+            ),
             const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              height: 36,
+            Align(
+              alignment: Alignment.center,
               child: OutlinedButton(
-                onPressed: () => hasJoinedRoom
-                      ? _showNoOverlappingRoomDialog(context) // 참여 중인 모닝방이 있으면 버튼 비활성화
-                      : null, // 참여 중인 모닝방이 없으면 버튼 활성화
+                onPressed: hasJoinedRoom
+                    ? () => _showNoOverlappingRoomDialog(context)
+                    : null,
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.orange,
-                  side: const BorderSide(color: Colors.orange),
+                  padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 15), // ✅ 내부 여백으로 너비 조절
+                  foregroundColor: const Color(0xFFCA8916),
+                  side: BorderSide.none,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  backgroundColor: const Color(0xFFFFF8E1),
+                  backgroundColor: const Color(0xFFF8EEAC),
                 ),
                 child: const Text('참여하기'),
               ),
@@ -232,8 +243,9 @@ class JoinedMorningRoomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 2,
+      elevation: 1,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -261,25 +273,44 @@ class JoinedMorningRoomCard extends StatelessWidget {
                 Text(time),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(description),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Icon(Icons.star, size: 16, color: Colors.orange),
+                const SizedBox(width: 4),
+                Text(
+                  description,
+                  overflow: TextOverflow.ellipsis, // ✅ ... 처리
+                  maxLines: 1,                      // ✅ 한 줄까지만 표시)
+                ),
+              ],
+            ),
             const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              height: 36,
-              child: ElevatedButton(
+            
+            Align(
+              alignment: Alignment.center,
+              child: OutlinedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ChatRoomPage(roomId: 'abc123')), // 더미 ID
                   );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFFF0B2),
-                  foregroundColor: Colors.black,
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 15), // ✅ 내부 여백으로 너비 조절
+                  foregroundColor: Colors.white,
+                  side: BorderSide.none,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  backgroundColor: const Color(0xFFFBC15B),
                 ),
-                child: const Text('채팅하기'),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.chat_bubble_outline, size: 18),
+                    SizedBox(width: 6),
+                    Text('채팅하기', style: TextStyle(fontSize: 14)),
+                  ],
+                ),
               ),
             ),
           ],

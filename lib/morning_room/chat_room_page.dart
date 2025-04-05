@@ -50,77 +50,10 @@ class ChatRoomPage extends StatelessWidget {
       'type': 'message','username': 'RYO', 'message': '배고파서 잠이 안 와요..', 'time': 'am 01:06', 'isMine': false},
   ];
 
-  void _showWakeSuccessDialog(BuildContext context) {
-    final participants = [
-      {"name": "Moondae123", "image": "assets/profile1.png"},
-      {"name": "yurimS2", "image": "assets/profile2.png"},
-      {"name": "jegalhhh", "image": "assets/profile3.png"},
-      {"name": "RYO", "image": "assets/profile4.png"},
-      {"name": "zoozoo08", "image": "assets/profile5.png"},
-      {"name": "IAMSLEEPY", "image": "assets/profile6.png"},
-    ];
-
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        backgroundColor: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('함께 기상', style: TextStyle(fontSize: 16, color: Colors.grey)),
-              const SizedBox(height: 12),
-              const Text('기상 성공', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              const Text(
-                '모든 멤버가 참여하셨군요!\n저장된 기록은 마이페이지에서 확인해보세요',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 16,
-                runSpacing: 16,
-                children: participants.map((user) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircleAvatar(
-                        radius: 28,
-                        backgroundImage: AssetImage(user['image']!),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(user['name']!, style: const TextStyle(fontSize: 12)),
-                    ],
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFFB74D),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  child: Text('확인'),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDFDFD),
+      backgroundColor: const Color(0xFFF7F7F7),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -183,14 +116,10 @@ class ChatRoomPage extends StatelessWidget {
         backgroundColor: Colors.orange,
         child: const Icon(Icons.phone),
         onPressed: () async {
-          final result = await Navigator.push(
+          await Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => const InCallPage()),
+            MaterialPageRoute(builder: (_) => const GroupCallPage()),
           );
-
-          if (result == true) {
-            _showWakeSuccessDialog(context); // ✅ 성공 팝업 호출
-          }
         },
       ),
     );
@@ -230,8 +159,10 @@ class ChatRoomPage extends StatelessWidget {
             const CircleAvatar(
               radius: 16,
               backgroundImage: NetworkImage('https://via.placeholder.com/150'),
-            ),
-          if (!isMine && showUserInfo) const SizedBox(width: 8),
+            )
+          else
+            const SizedBox(width: 32),
+          if (!isMine) const SizedBox(width: 8),
 
           Flexible(
             child: Column(
@@ -249,7 +180,7 @@ class ChatRoomPage extends StatelessWidget {
                   child: Text(message),
                 ),
                 const SizedBox(height: 4),
-                Text(time, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                if (showUserInfo) Text(time, style: const TextStyle(fontSize: 10, color: Colors.grey)),
               ],
             ),
           ),
