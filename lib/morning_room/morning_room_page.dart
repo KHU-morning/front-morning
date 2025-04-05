@@ -63,12 +63,12 @@ class MorningRoomPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 16),
+            const SizedBox(height: 40),
             const Text(
               '함께 기상',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -166,7 +166,7 @@ class MorningRoomCard extends StatelessWidget {
       color: Colors.white,
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 2,
+      elevation: 1,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -176,33 +176,37 @@ class MorningRoomCard extends StatelessWidget {
               children: [
                 const CircleAvatar(
                   child: Icon(Icons.person, color: Colors.white, size: 20),
-                  radius: 20,
+                  radius: 15,
                 ),
                 const SizedBox(width: 8),
-                Text('$username (방장)', style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text('$username (방장)'),
               ],
             ),
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.calendar_today, size: 16, color: Colors.orange),
-                const SizedBox(width: 4),
+                const Icon(Icons.calendar_today, size: 20, color: Colors.orange),
+                const SizedBox(width: 8),
                 Text(date),
-                const SizedBox(width: 12),
-                const Icon(Icons.access_time, size: 16, color: Colors.orange),
-                const SizedBox(width: 4),
+                const SizedBox(width: 20),
+                const Icon(Icons.access_time, size: 20, color: Colors.orange),
+                const SizedBox(width: 8),
                 Text(time),
               ],
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.star, size: 16, color: Colors.orange),
+                const Icon(Icons.star, size: 20, color: Colors.orange),
                 const SizedBox(width: 4),
-                Text(description),
+                Text(description,
+                  overflow: TextOverflow.ellipsis, // ✅ ... 처리
+                  maxLines: 1,                      // ✅ 한 줄까지만 표시)
+                ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
+
             Align(
               alignment: Alignment.center,
               child: OutlinedButton(
@@ -210,7 +214,7 @@ class MorningRoomCard extends StatelessWidget {
                     ? () => _showNoOverlappingRoomDialog(context)
                     : null,
                 style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 15), // ✅ 내부 여백으로 너비 조절
+                  padding: const EdgeInsets.symmetric(horizontal: 115, vertical: 10), // ✅ 내부 여백으로 너비 조절
                   foregroundColor: const Color(0xFFCA8916),
                   side: BorderSide.none,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -255,28 +259,28 @@ class JoinedMorningRoomCard extends StatelessWidget {
               children: [
                 const CircleAvatar(
                   child: Icon(Icons.person, color: Colors.white, size: 20),
-                  radius: 20,
+                  radius: 15,
                 ),
                 const SizedBox(width: 8),
-                Text('$username (방장)', style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text('$username (방장)'),
               ],
             ),
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.calendar_today, size: 16, color: Colors.orange),
-                const SizedBox(width: 4),
+                const Icon(Icons.calendar_today, size: 20, color: Colors.orange),
+                const SizedBox(width: 8),
                 Text(date),
-                const SizedBox(width: 12),
-                const Icon(Icons.access_time, size: 16, color: Colors.orange),
-                const SizedBox(width: 4),
+                const SizedBox(width: 20),
+                const Icon(Icons.access_time, size: 20, color: Colors.orange),
+                const SizedBox(width: 8),
                 Text(time),
               ],
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.star, size: 16, color: Colors.orange),
+                const Icon(Icons.star, size: 20, color: Colors.orange),
                 const SizedBox(width: 4),
                 Text(
                   description,
@@ -285,7 +289,7 @@ class JoinedMorningRoomCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
             
             Align(
               alignment: Alignment.center,
@@ -297,7 +301,7 @@ class JoinedMorningRoomCard extends StatelessWidget {
                   );
                 },
                 style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 15), // ✅ 내부 여백으로 너비 조절
+                  padding: const EdgeInsets.symmetric(horizontal: 115-12, vertical: 10), // ✅ 내부 여백으로 너비 조절
                   foregroundColor: Colors.white,
                   side: BorderSide.none,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
