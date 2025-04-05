@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -8,23 +10,26 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _collegeController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _departmentController = TextEditingController();
+  final TextEditingController _studentIdController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _idController = TextEditingController();
 
   @override
   void dispose() {
-    _collegeController.dispose();
+    _phoneController.dispose();
     _departmentController.dispose();
+    _studentIdController.dispose();
     _nameController.dispose();
     _idController.dispose();
     super.dispose();
   }
 
   bool get _isFormValid =>
-      _collegeController.text.isNotEmpty &&
+      _phoneController.text.isNotEmpty &&
       _departmentController.text.isNotEmpty &&
+      _studentIdController.text.isNotEmpty &&
       _nameController.text.isNotEmpty &&
       _idController.text.isNotEmpty;
 
@@ -33,7 +38,17 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('로그인'),
+        toolbarHeight: 80,
+        title: Text(
+          '로그인',
+          style: TextStyle(
+            color: const Color(0xFF171717),
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            height: 1.0,
+          ),
+        ),
+        centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -49,269 +64,20 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 32),
-                      // 단과대학 선택
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            '단과대학',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _collegeController,
-                            readOnly: true,
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('단과대학 선택'),
-                                  content: SizedBox(
-                                    width: double.maxFinite,
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: 10, // 임시 데이터
-                                      itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: Text('단과대학 ${index + 1}'),
-                                          onTap: () {
-                                            setState(() {
-                                              _collegeController.text = '단과대학 ${index + 1}';
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
-                              hintText: '소속 단과대학을 선택해주세요',
-                                hintStyle: const TextStyle(
-                                fontSize: 13,
-                                color: Color.fromRGBO(82, 82, 82, 1),
-                              ),
-                                border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Color.fromRGBO(182, 182, 182, 1)),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Color.fromRGBO(182, 182, 182, 1)),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Color.fromRGBO(182, 182, 182, 1)),
-                              ),
-                              suffixIcon: _collegeController.text.isNotEmpty
-                                  ? IconButton(
-                                      icon: const Icon(Icons.clear, size: 18, color: Color.fromRGBO(182, 182, 182, 1)),
-                                      onPressed: () {
-                                        setState(() {
-                                          _collegeController.clear();
-                                        });
-                                      },
-                                    )
-                                  : const Icon(Icons.arrow_drop_down, size: 18),
-                            ),
-                            onChanged: (value) => setState(() {}),
-                          ),
-                        ],
-                      ),
+                      buildTextField('휴대폰 번호', _phoneController, '휴대폰 번호를 입력해주세요.', TextInputType.phone),
                       const SizedBox(height: 16),
-                      // 학과 선택
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            '학과',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _departmentController,
-                            readOnly: true,
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('학과 선택'),
-                                  content: SizedBox(
-                                    width: double.maxFinite,
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: 10, // 임시 데이터
-                                      itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: Text('학과 ${index + 1}'),
-                                          onTap: () {
-                                            setState(() {
-                                              _departmentController.text = '학과 ${index + 1}';
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
-                              hintText: '소속 학과를 선택해주세요',
-                              hintStyle: const TextStyle(
-                                fontSize: 13,
-                                color: Color.fromRGBO(82, 82, 82, 1),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              suffixIcon: _departmentController.text.isNotEmpty
-                                  ? IconButton(
-                                      icon: const Icon(Icons.clear, size: 18),
-                                      onPressed: () {
-                                        setState(() {
-                                          _departmentController.clear();
-                                        });
-                                      },
-                                    )
-                                  : const Icon(Icons.arrow_drop_down, size: 18),
-                            ),
-                            onChanged: (value) => setState(() {}),
-                          ),
-                        ],
-                      ),
+                      buildTextField('학과', _departmentController, '소속 학과를 입력해주세요.'),
                       const SizedBox(height: 16),
-                      // 이름 입력
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              '이름',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _nameController,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
-                              hintText: '이름을 입력해주세요',
-                              hintStyle: const TextStyle(
-                                fontSize: 13,
-                                color: Color.fromRGBO(182, 182, 182, 1),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide.none,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide.none,
-                                ),
-                                fillColor: const Color.fromRGBO(238, 238, 238, 1),
-                                filled: true,
-                              suffixIcon: _nameController.text.isNotEmpty
-                                  ? IconButton(
-                                      icon: const Icon(Icons.clear, size: 18),
-                                      onPressed: () {
-                                        setState(() {
-                                          _nameController.clear();
-                                        });
-                                      },
-                                    )
-                                  : null,
-                            ),
-                            onChanged: (value) => setState(() {}),
-                          ),
-                        ],
-                      ),
+                      buildTextField('학번', _studentIdController, '학번을 입력해주세요.', TextInputType.number),
                       const SizedBox(height: 16),
-                      // 아이디 입력
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            '아이디',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _idController,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
-                              hintText: '아이디를 입력해주세요',
-                              hintStyle: const TextStyle(
-                                fontSize: 14,
-                                color: Color.fromRGBO(182, 182, 182, 1),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide.none,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide.none,
-                                ),
-                                fillColor: const Color.fromRGBO(238, 238, 238, 1),
-                                filled: true,
-                              suffixIcon: _idController.text.isNotEmpty
-                                  ? IconButton(
-                                      icon: const Icon(Icons.clear, size: 18),
-                                      onPressed: () {
-                                        setState(() {
-                                          _idController.clear();
-                                        });
-                                      },
-                                    )
-                                  : null,
-                            ),
-                            onChanged: (value) => setState(() {}),
-                          ),
-                        ],
-                      ),
+                      buildTextField('이름', _nameController, '이름을 입력해주세요.'),
+                      const SizedBox(height: 16),
+                      buildTextField('아이디', _idController, '아이디를 입력해주세요.'),
                     ],
                   ),
                 ),
               ),
             ),
-            // 하단 버튼 영역
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -327,53 +93,70 @@ class _LoginPageState extends State<LoginPage> {
               ),
               child: Column(
                 children: [
-                  // 로그인 버튼
-                    SizedBox(
+                  SizedBox(
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
                       onPressed: _isFormValid
-                        ? () {
-                            Navigator.pushReplacementNamed(context, '/home');
-                        }
-                        : null,
+                          ? () async {
+                              final response = await http.post(
+                                Uri.parse('http://127.0.0.1:8000/token'),
+                                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                body: {
+                                  'username': _idController.text,
+                                  'password': _nameController.text,
+                                },
+                              );
+
+                              if (response.statusCode == 200) {
+                                final token = jsonDecode(response.body)['access_token'];
+                                print('로그인 성공! 토큰: $token');
+                                Navigator.pushReplacementNamed(context, '/home');
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text('로그인 실패'),
+                                    content: const Text('아이디 또는 이름(비밀번호)이 잘못되었습니다.'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('확인'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            }
+                          : null,
                       style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFBC15B),
-                      foregroundColor: Colors.white,
-                      disabledBackgroundColor: Colors.grey[300],
-                      elevation: 0, // 그림자 효과 제거
-                      shadowColor: Colors.transparent, // 그림자 색상 제거
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(200),
-                      ),
+                        backgroundColor: const Color(0xFFFBC15B),
+                        foregroundColor: Colors.white,
+                        disabledBackgroundColor: Colors.grey[300],
+                        elevation: 0,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(200),
+                        ),
                       ),
                       child: const Text(
-                      '로그인',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
+                        '로그인',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                     ),
-                    ),
+                  ),
                   const SizedBox(height: 16),
-                  // 회원가입 버튼
                   SizedBox(
                     width: double.infinity,
-                    height: 48,
+                    height: 40,
                     child: TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/register');
                       },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.grey,
-                      ),
+                      style: TextButton.styleFrom(foregroundColor: Colors.grey),
                       child: const Text(
                         '회원가입',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -385,4 +168,49 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-} 
+
+  Widget buildTextField(String label, TextEditingController controller, String hint, [TextInputType type = TextInputType.text]) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          keyboardType: type,
+          decoration: InputDecoration(
+            isDense: true,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+            hintText: hint,
+            hintStyle: const TextStyle(fontSize: 13, color: Color.fromRGBO(182, 182, 182, 1)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
+            ),
+            fillColor: const Color.fromRGBO(238, 238, 238, 1),
+            filled: true,
+            suffixIcon: controller.text.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.clear, size: 18),
+                    onPressed: () {
+                      setState(() {
+                        controller.clear();
+                      });
+                    },
+                  )
+                : null,
+          ),
+          onChanged: (value) => setState(() {}),
+        ),
+      ],
+    );
+  }
+}

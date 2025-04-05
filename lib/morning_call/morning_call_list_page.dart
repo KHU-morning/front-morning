@@ -42,14 +42,17 @@ class MorningCallListPage extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 80.0),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 6,
                     childAspectRatio: 0.7,
                   ),
                   itemCount: 10,
                   itemBuilder: (context, index) {
                     return Card(
-                      color: const Color(0xFFFCFCFC),
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12), // border-radius: 12px
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                         child: Column(
@@ -188,11 +191,10 @@ class MorningCallListPage extends StatelessWidget {
                 ),
               ),
               padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 48,
+              child: Center(
                 child: SizedBox(
                   width: 232,
+                  height: 48,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/morning_call/request');
