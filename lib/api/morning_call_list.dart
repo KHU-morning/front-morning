@@ -16,7 +16,7 @@ Future<List<Map<String, dynamic>>> fetchWakeRequests() async {
   );
 
   if (response.statusCode == 200) {
-    final List<dynamic> data = jsonDecode(response.body);
+    final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
     return data.cast<Map<String, dynamic>>();
   } else {
     throw Exception("모닝콜 요청 정보를 불러오지 못했습니다.");

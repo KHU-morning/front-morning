@@ -185,11 +185,11 @@ class MorningRoomCard extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.calendar_today, size: 20, color: Colors.orange),
+                const Icon(Icons.calendar_today, size: 20, color: Color(0xFFFBC15B)),
                 const SizedBox(width: 8),
                 Text(date),
                 const SizedBox(width: 20),
-                const Icon(Icons.access_time, size: 20, color: Colors.orange),
+                const Icon(Icons.access_time, size: 20, color: Color(0xFFFBC15B)),
                 const SizedBox(width: 8),
                 Text(time),
               ],
@@ -197,7 +197,7 @@ class MorningRoomCard extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.star, size: 20, color: Colors.orange),
+                const Icon(Icons.star, size: 20, color: Color(0xFFFBC15B)),
                 const SizedBox(width: 4),
                 Text(description,
                   overflow: TextOverflow.ellipsis, // ✅ ... 처리
@@ -268,11 +268,11 @@ class JoinedMorningRoomCard extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.calendar_today, size: 20, color: Colors.orange),
+                const Icon(Icons.calendar_today, size: 20, color: Color(0xFFFBC15B)),
                 const SizedBox(width: 8),
                 Text(date),
                 const SizedBox(width: 20),
-                const Icon(Icons.access_time, size: 20, color: Colors.orange),
+                const Icon(Icons.access_time, size: 20, color: Color(0xFFFBC15B)),
                 const SizedBox(width: 8),
                 Text(time),
               ],
@@ -280,7 +280,7 @@ class JoinedMorningRoomCard extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.star, size: 20, color: Colors.orange),
+                const Icon(Icons.star, size: 20, color: Color(0xFFFBC15B)),
                 const SizedBox(width: 4),
                 Text(
                   description,
