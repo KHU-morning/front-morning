@@ -175,7 +175,7 @@ class MorningRoomCard extends StatelessWidget {
             Row(
               children: [
                 const CircleAvatar(
-                  child: Icon(Icons.person, color: Colors.white, size: 20),
+                  backgroundImage: AssetImage('assets/img/default_profile.png'),
                   radius: 15,
                 ),
                 const SizedBox(width: 8),
@@ -258,7 +258,7 @@ class JoinedMorningRoomCard extends StatelessWidget {
             Row(
               children: [
                 const CircleAvatar(
-                  child: Icon(Icons.person, color: Colors.white, size: 20),
+                  backgroundImage: AssetImage('assets/img/default_profile.png'),
                   radius: 15,
                 ),
                 const SizedBox(width: 8),
