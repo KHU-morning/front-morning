@@ -3,8 +3,11 @@ import 'auth/login_page.dart';
 import 'auth/register_page.dart';
 import 'home/home_page.dart';
 import 'morning_call/morning_call_request_page.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // 비동기 작업 전에 필수!
+  await initializeDateFormatting('ko_KR', null);
   runApp(const MyApp());
 }
 

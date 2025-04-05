@@ -207,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                               '이름',
                             style: TextStyle(
                               fontSize: 14,
