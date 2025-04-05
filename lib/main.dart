@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'auth/login_page.dart';
 import 'auth/register_page.dart';
 import 'home/home_page.dart';
@@ -33,49 +34,73 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD0C4C4),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 40),
-            const SizedBox(height: 80),
-            GestureDetector(
-              onTap: () => Navigator.pushNamed(context, '/login'),
-              child: const CustomButton(text: "로그인"),
-            ),
-            const SizedBox(height: 16),
-            GestureDetector(
-              onTap: () => Navigator.pushNamed(context, '/register'),
-              child: const CustomButton(text: "회원가입"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-// 둥근 버튼 위젯
-class CustomButton extends StatelessWidget {
-  final String text;
-
-  const CustomButton({super.key, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 200,
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Center(
-        child: Text(
-          text,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 160),
+              const Text(
+                '서로서로 깨워주며\n우리가 함께 만드는 아침, 굿모닝!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF333333), // 진한 회색
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  height: 1.6,
+                ),
+              ),
+              const SizedBox(height: 80),
+              SvgPicture.asset(
+                'assets/img/logo.svg',
+                width: 180,
+                height: 180,
+              ),
+              const SizedBox(height: 10),
+              const Spacer(),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pushNamed(context, '/login'),
+                  style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFDF0AC),
+                  foregroundColor: const Color(0xFFCA8916),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32),
+                  ),
+                  elevation: 0,
+                  ),
+                  child: const Text(
+                  '로그인',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pushNamed(context, '/register'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFFC84E),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    '회원가입',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );
