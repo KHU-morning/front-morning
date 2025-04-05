@@ -145,7 +145,8 @@ class MorningCallListPage extends StatelessWidget {
                                               BorderRadius.circular(16)),
                                       insetPadding: const EdgeInsets.symmetric(
                                           horizontal: 40),
-                                      backgroundColor: const Color(0xFFFCFCFC),                                      child: Column(
+                                      backgroundColor: const Color(0xFFFCFCFC),
+                                      child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           const SizedBox(height: 24),
@@ -176,8 +177,7 @@ class MorningCallListPage extends StatelessWidget {
                                             children: [
                                               Expanded(
                                                 child: InkWell(
-                                                  onTap: () =>
-                                                      Navigator.pop(context),
+                                                  onTap: () => Navigator.pop(context),
                                                   child: Container(
                                                     height: 48,
                                                     alignment: Alignment.center,
@@ -212,8 +212,6 @@ class MorningCallListPage extends StatelessWidget {
                                                       style: TextStyle(
                                                         color:
                                                             Color(0xFFCA8916),
-                                                        fontWeight:
-                                                            FontWeight.w600,
                                                         fontSize: 15,
                                                       ),
                                                     ),

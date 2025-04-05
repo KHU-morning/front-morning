@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/calendar_sheet.dart';
 
 class MorningCallRequestPage extends StatefulWidget {
   const MorningCallRequestPage({super.key});
@@ -9,7 +10,9 @@ class MorningCallRequestPage extends StatefulWidget {
 
 class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
   DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();
+  int selectedHour = 8;
+  int selectedMinute = 30;
+  String period = 'AM';
   final TextEditingController _reasonController = TextEditingController();
   bool isPublic = true;
   int _selectedIndex = 0;
@@ -21,29 +24,29 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    await showModalBottomSheet(
       context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 30)),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return CalendarSheet(
+          selectedDate: selectedDate,
+          onDateSelected: (picked) {
+            setState(() {
+              selectedDate = picked;
+            });
+            Navigator.pop(context); // 모달 닫기
+          },
+        );
+      },
     );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
   }
 
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-    );
-    if (picked != null && picked != selectedTime) {
-      setState(() {
-        selectedTime = picked;
-      });
-    }
+  TimeOfDay get selectedTime {
+    final hour = period == 'AM' ? selectedHour % 12 : (selectedHour % 12) + 12;
+    return TimeOfDay(hour: hour, minute: selectedMinute);
   }
 
   @override
@@ -51,6 +54,7 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: AppBar(
+        backgroundColor: const Color(0xFFF7F7F7),
         title: const Text('모닝콜 요청'),
         foregroundColor: Colors.black,
         leading: IconButton(
@@ -62,18 +66,23 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('날짜', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Text('날짜',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () => _selectDate(context),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
+                        color: Colors.white,
+                        border: Border.all(
+                            color: const Color.fromRGBO(0, 0, 0, 0.15)),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -89,82 +98,19 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
                               color: Color(0xFFEEEEEE),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.calendar_today, color: Color.fromRGBO(23, 23, 23, 1)),
+                            child: const Icon(Icons.calendar_today,
+                                color: Color(0xFF171717)),
                           ),
                         ],
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Text('시간', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${selectedTime.hour.toString().padLeft(2, '0')} : ${selectedTime.minute.toString().padLeft(2, '0')}',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        Column(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedTime = TimeOfDay(hour: selectedTime.hourOfPeriod, minute: selectedTime.minute);
-                                });
-                              },
-                                child: Container(
-                                width: 80,
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: selectedTime.period == DayPeriod.am ? const Color(0xFFF8EEAC) : const Color(0xFFEEEEEE),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  'am',
-                                  style: TextStyle(
-                                  fontSize: 14,
-                                  color: selectedTime.period == DayPeriod.am ? const Color(0xFFCA8916) : const Color(0xFF171717),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedTime = TimeOfDay(hour: selectedTime.hourOfPeriod + 12, minute: selectedTime.minute);
-                                });
-                              },
-                              child: Container(
-                                width: 80,
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: selectedTime.period == DayPeriod.pm ? const Color(0xFFF8EEAC) : const Color(0xFFEEEEEE),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  'pm',
-                                  style: TextStyle(
-                                  fontSize: 14,
-                                  color: selectedTime.period == DayPeriod.pm ? const Color(0xFFCA8916) : const Color(0xFF171717),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
+                  _buildTimePicker(),
                   const SizedBox(height: 24),
-                  const Text('이유', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Text('이유',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   Container(
                     height: 60,
@@ -183,7 +129,8 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
                               textAlignVertical: TextAlignVertical.center,
                               decoration: const InputDecoration(
                                 hintText: '설정한 시간에 일어나야 하는 이유를 작성해주세요.',
-                                hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
+                                hintStyle:
+                                    TextStyle(fontSize: 13, color: Colors.grey),
                                 border: InputBorder.none,
                                 counterText: '',
                               ),
@@ -192,7 +139,8 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.clear, size: 18, color: Colors.grey),
+                          icon: const Icon(Icons.clear,
+                              size: 18, color: Colors.grey),
                           onPressed: () => _reasonController.clear(),
                         ),
                       ],
@@ -202,13 +150,16 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('공백 포함 10자 이내', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                      const Text('공백 포함 10자 이내',
+                          style: TextStyle(
+                              color: Color(0xFFB6B6B6), fontSize: 12)),
                       Row(
                         children: [
-                            Checkbox(
+                          Checkbox(
                             value: isPublic,
-                            onChanged: (value) => setState(() => isPublic = value ?? true),
-                            activeColor: const Color.fromRGBO(251, 193, 91, 1),
+                            onChanged: (value) =>
+                                setState(() => isPublic = value ?? true),
+                            activeColor: const Color(0xFFFBC15B),
                           ),
                           const Text('공개', style: TextStyle(fontSize: 14)),
                         ],
@@ -226,36 +177,97 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
               height: 56,
               child: ElevatedButton(
                 onPressed: () {
-                  String weekday = ['월', '화', '수', '목', '금', '토', '일'][selectedDate.weekday - 1];
-                  String period = selectedTime.period == DayPeriod.am ? 'am' : 'pm';
-                  int displayHour = selectedTime.hourOfPeriod == 0 ? 12 : selectedTime.hourOfPeriod;
+                  String weekday = [
+                    '월',
+                    '화',
+                    '수',
+                    '목',
+                    '금',
+                    '토',
+                    '일'
+                  ][selectedDate.weekday - 1];
+                  String formattedPeriod = period.toLowerCase();
+                  int displayHour = selectedHour == 0 ? 12 : selectedHour;
 
                   showDialog(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('이대로 모닝콜을 요청하시겠어요?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                      content: Column(
+                    barrierDismissible: true,
+                    builder: (context) => Dialog(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      insetPadding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
                         mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('날짜&시간 : ${selectedDate.year}.${selectedDate.month.toString().padLeft(2, '0')}.${selectedDate.day.toString().padLeft(2, '0')}($weekday) ${displayHour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}$period'),
-                          const SizedBox(height: 8),
-                          Text('이유: ${_reasonController.text}'),
+                                          const SizedBox(height: 24),
+                          const Text(
+                            '이대로 모닝콜을 요청하시겠어요?',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            '날짜 및 시간: ${selectedDate.year}.${selectedDate.month.toString().padLeft(2, '0')}.${selectedDate.day.toString().padLeft(2, '0')}(${[
+                              "월",
+                              "화",
+                              "수",
+                              "목",
+                              "금",
+                              "토",
+                              "일"
+                            ][selectedDate.weekday - 1]}) ${selectedHour.toString().padLeft(2, '0')}:${selectedMinute.toString().padLeft(2, '0')} ${period.toLowerCase()}',
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                          const SizedBox(height: 4),
+                          Text('이유: ${_reasonController.text}',
+                              style: const TextStyle(fontSize: 13)),
+                          const SizedBox(height: 24),
+                          const Divider(height: 1),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () => Navigator.pop(context),
+                                  child: Container(
+                                    height: 48,
+                                    alignment: Alignment.center,
+                                    child: Center(
+                                      child: Text('취소',
+                                          style: TextStyle(color: Colors.grey)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                  width: 1,
+                                  height: 48,
+                                  color: const Color(0xFFE0E0E0)),
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    // 여기에 실제 모닝콜 요청 API 또는 다음 로직
+                                  },
+                                  child: Container(
+                                    height: 48,
+                                    alignment: Alignment.center,
+                                    child: const Text(
+                                      '확인',
+                                      style: TextStyle(
+                                        color: Color(0xFFCA8916),
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('취소'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('확인'),
-                        ),
-                      ],
                     ),
                   );
                 },
@@ -287,6 +299,123 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
           onTap: (index) => setState(() => _selectedIndex = index),
         ),
       ),
+    );
+  }
+
+  Widget _buildTimePicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('시간',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center, // ✅ 중앙 정렬로 수정
+            children: [
+              // 시(hour)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_drop_up),
+                    onPressed: () {
+                      if (selectedHour < 12) setState(() => selectedHour++);
+                    },
+                  ),
+                  Text(selectedHour.toString().padLeft(2, '0'),
+                      style: const TextStyle(fontSize: 20)),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_drop_down),
+                    onPressed: () {
+                      if (selectedHour > 1) setState(() => selectedHour--);
+                    },
+                  ),
+                ],
+              ),
+
+              // 분(minute)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_drop_up),
+                    onPressed: () {
+                      if (selectedMinute < 59) setState(() => selectedMinute++);
+                    },
+                  ),
+                  Text(selectedMinute.toString().padLeft(2, '0'),
+                      style: const TextStyle(fontSize: 20)),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_drop_down),
+                    onPressed: () {
+                      if (selectedMinute > 0) setState(() => selectedMinute--);
+                    },
+                  ),
+                ],
+              ),
+
+              // AM/PM 선택 (세로 정렬 + 높이 맞춤)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center, // ✅ 가운데 정렬
+                children: ['AM', 'PM'].map((e) {
+                  final isSelected = period == e;
+                  return GestureDetector(
+                    onTap: () => setState(() => period = e),
+                    child: Container(
+                      width: 70,
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 6),
+                      decoration: BoxDecoration(
+                        color:
+                            isSelected ? Colors.yellow[100] : Colors.grey[200],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Text(
+                          e.toLowerCase(),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color:
+                                isSelected ? Colors.orange : Colors.grey[600],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNumberPicker(
+      int min, int max, int current, ValueChanged<int> onChanged) {
+    return Column(
+      children: [
+        IconButton(
+            icon: const Icon(Icons.arrow_drop_up),
+            onPressed: () {
+              if (current < max) onChanged(current + 1);
+            }),
+        Text(current.toString().padLeft(2, '0'),
+            style: const TextStyle(fontSize: 20)),
+        IconButton(
+            icon: const Icon(Icons.arrow_drop_down),
+            onPressed: () {
+              if (current > min) onChanged(current - 1);
+            }),
+      ],
     );
   }
 }
