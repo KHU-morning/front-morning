@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:k_html_flutter/mypage/statistics_detail_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -156,29 +157,35 @@ class _MyPageScreenState extends State<MyPageScreen> {
                 ),
               );
             },
-            headerStyle: const HeaderStyle(
-              titleCentered: true,
+            headerStyle: HeaderStyle(
               formatButtonVisible: false,
-              leftChevronIcon: Icon(Icons.chevron_left, size: 24),
-              rightChevronIcon: Icon(Icons.chevron_right, size: 24),
-              titleTextStyle:
-                  TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-            ),
-            calendarStyle: CalendarStyle(
-              todayDecoration: BoxDecoration(
-                color: const Color(0xFFFFC84E).withOpacity(0.4),
-                shape: BoxShape.circle,
+              titleCentered: true,
+              headerMargin: EdgeInsets.zero,
+              titleTextFormatter: (date, locale) =>
+                  DateFormat.yMMMM(locale).format(date),
+              titleTextStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
               ),
-              selectedDecoration: const BoxDecoration(
+              leftChevronIcon: const Icon(Icons.chevron_left),
+              rightChevronIcon: const Icon(Icons.chevron_right),
+            ),
+            calendarStyle: const CalendarStyle(
+              isTodayHighlighted: false, // ✅ 오늘 날짜 강조 안 함
+              selectedDecoration: BoxDecoration(
                 color: Color(0xFFFFC84E),
                 shape: BoxShape.circle,
               ),
-              weekendTextStyle: const TextStyle(color: Colors.deepOrange),
-              defaultTextStyle: const TextStyle(fontSize: 14),
-            ),
-            daysOfWeekStyle: const DaysOfWeekStyle(
-              weekendStyle: TextStyle(color: Colors.deepOrange),
-              weekdayStyle: TextStyle(color: Color(0xFF333333)),
+              selectedTextStyle: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+              outsideTextStyle:
+                  TextStyle(fontSize: 16, color: Color(0xFFB6B6B6)),
+              defaultTextStyle:
+                  TextStyle(fontSize: 16, color: Color(0xFF525252)),
+              weekendTextStyle:
+                  TextStyle(fontSize: 16, color: Color(0xFF525252)),
             ),
           ),
         ),
