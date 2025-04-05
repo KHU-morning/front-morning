@@ -193,83 +193,80 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
                     context: context,
                     barrierDismissible: true,
                     builder: (context) => Dialog(
+                      backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 24, horizontal: 20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              '이대로 모닝콜을 요청하시겠어요?',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              '날짜 및 시간: ${selectedDate.year}.${selectedDate.month.toString().padLeft(2, '0')}.${selectedDate.day.toString().padLeft(2, '0')}(${[
-                                "월",
-                                "화",
-                                "수",
-                                "목",
-                                "금",
-                                "토",
-                                "일"
-                              ][selectedDate.weekday - 1]}) ${selectedHour.toString().padLeft(2, '0')}:${selectedMinute.toString().padLeft(2, '0')} ${period.toLowerCase()}',
-                              style: const TextStyle(fontSize: 13),
-                            ),
-                            const SizedBox(height: 4),
-                            Text('이유: ${_reasonController.text}',
-                                style: const TextStyle(fontSize: 13)),
-                            const SizedBox(height: 24),
-                            const Divider(height: 1),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () => Navigator.of(context).pop(),
-                                    child: const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 12),
-                                      child: Center(
-                                        child: Text('취소',
-                                            style:
-                                                TextStyle(color: Colors.grey)),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                    width: 1,
+                      insetPadding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                                          const SizedBox(height: 24),
+                          const Text(
+                            '이대로 모닝콜을 요청하시겠어요?',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            '날짜 및 시간: ${selectedDate.year}.${selectedDate.month.toString().padLeft(2, '0')}.${selectedDate.day.toString().padLeft(2, '0')}(${[
+                              "월",
+                              "화",
+                              "수",
+                              "목",
+                              "금",
+                              "토",
+                              "일"
+                            ][selectedDate.weekday - 1]}) ${selectedHour.toString().padLeft(2, '0')}:${selectedMinute.toString().padLeft(2, '0')} ${period.toLowerCase()}',
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                          const SizedBox(height: 4),
+                          Text('이유: ${_reasonController.text}',
+                              style: const TextStyle(fontSize: 13)),
+                          const SizedBox(height: 24),
+                          const Divider(height: 1),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () => Navigator.pop(context),
+                                  child: Container(
                                     height: 48,
-                                    color: Colors.grey[300]),
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                      // 여기에 실제 모닝콜 요청 API 또는 다음 로직
-                                    },
-                                    child: const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 12),
-                                      child: Center(
-                                        child: Text(
-                                          '확인',
-                                          style: TextStyle(
-                                              color: Color(0xFFCA8916),
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                    alignment: Alignment.center,
+                                    child: Center(
+                                      child: Text('취소',
+                                          style: TextStyle(color: Colors.grey)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                  width: 1,
+                                  height: 48,
+                                  color: const Color(0xFFE0E0E0)),
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    // 여기에 실제 모닝콜 요청 API 또는 다음 로직
+                                  },
+                                  child: Container(
+                                    height: 48,
+                                    alignment: Alignment.center,
+                                    child: const Text(
+                                      '확인',
+                                      style: TextStyle(
+                                        color: Color(0xFFCA8916),
+                                        fontSize: 15,
                                       ),
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   );
