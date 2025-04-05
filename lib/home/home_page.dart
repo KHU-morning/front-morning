@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../morning_call/morning_call_list_page.dart';
 import '../morning_room/morning_room_page.dart';
+import '../mypage/my_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,38 +16,27 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     const MorningCallListPage(),
     const MorningRoomPage(),
-    // const Center(child: Text('모닝방')),  // 임시 페이지
-    const Center(child: Text('마이페이지')),  // 임시 페이지
+    const MyPageScreen(),
   ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.alarm),
-            label: '모닝콜',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: '모닝방',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '마이페이지',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
+      bottomNavigationBar: SizedBox(
+        height: 80,
+        child: BottomNavigationBar(
+          backgroundColor: const Color(0xFFFCFCFC),
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.alarm), label: '모닝콜'),
+            BottomNavigationBarItem(icon: Icon(Icons.people), label: '모닝방'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: '마이페이지'),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: const Color(0xFFFBC15B),
+          onTap: (index) => setState(() => _selectedIndex = index),
+        ),
       ),
     );
   }
