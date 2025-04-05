@@ -12,7 +12,7 @@ Future<Map<String, dynamic>> fetchMyProfile() async {
   );
 
   if (response.statusCode == 200) {
-    return jsonDecode(response.body);
+    return jsonDecode(utf8.decode(response.bodyBytes));
   } else {
     throw Exception('마이페이지 정보 가져오기 실패');
   }
