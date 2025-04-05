@@ -42,7 +42,7 @@ class ChatRoomPage extends StatelessWidget {
       'type': 'message',
       'username': 'Moondae123',
       'message': '얼른 자자 그래야 내일 후회 안 하지...',
-      'time': 'am 01:03',
+      'time': 'am 01:0',
       'isMine': false
     },
     {
@@ -62,81 +62,105 @@ class ChatRoomPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        title: const Text('주말이라고 늦잠 자...', style: TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  transitionDuration: const Duration(milliseconds: 300),
-                  pageBuilder: (_, __, ___) => const RoomInfoPage(),
-                  transitionsBuilder: (_, animation, __, child) {
-                    final offsetAnimation = Tween<Offset>(
-                      begin: const Offset(1.0, 0.0), // 👉 오른쪽에서 시작
-                      end: Offset.zero,
-                    ).animate(animation);
-
-                    return SlideTransition(position: offsetAnimation, child: child);
-                  },
-                ),
-              );
-            },
-            icon: const Icon(Icons.menu)
-          ),
-        ],
-      ),
       body: Column(
         children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final msg = messages[index];
-                final bool isDate = msg['type'] == 'date';
+          // 상단 여백 추가
+          Container(
+            height: 40, // 40px 여백
+            color: Colors.white, // 흰색 배경
+          ),
+          AppBar(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            title: const Text(
+              '주말이라고 늦잠 자...',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      transitionDuration: const Duration(milliseconds: 300),
+                      pageBuilder: (_, __, ___) => const RoomInfoPage(),
+                      transitionsBuilder: (_, animation, __, child) {
+                        final offsetAnimation = Tween<Offset>(
+                          begin: const Offset(1.0, 0.0), // 👉 오른쪽에서 시작
+                          end: Offset.zero,
+                        ).animate(animation);
 
-                if (isDate) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Text(
-                        msg['date'],
-                        style: const TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
+                        return SlideTransition(position: offsetAnimation, child: child);
+                      },
                     ),
                   );
-                }
+                },
+                icon: const Icon(Icons.menu),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      final msg = messages[index];
+                      final bool isDate = msg['type'] == 'date';
 
-                // 👇 이전 메시지 비교
-                final prevMsg = index > 0 ? messages[index - 1] : null;
-                final isSameUserAndTime = prevMsg != null &&
-                    prevMsg['type'] == 'message' &&
-                    prevMsg['username'] == msg['username'] &&
-                    prevMsg['time'] == msg['time'];
+                      if (isDate) {
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Text(
+                              msg['date'],
+                              style: const TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                          ),
+                        );
+                      }
 
-                return _buildChatBubble(
-                  isMine: msg['isMine'],
-                  username: msg['username'],
-                  message: msg['message'],
-                  time: msg['time'],
-                  showUserNick: !isSameUserAndTime,
-                  showTime: !isSameUserAndTime,
-                );
-              },
+                      // 👇 이전 메시지 비교
+                      final prevMsg = index > 0 ? messages[index - 1] : null;
+                      final nextMsg = index < messages.length - 1 ? messages[index + 1] : null;
+
+                      final isSameUserAndTime = prevMsg != null &&
+                          prevMsg['type'] == 'message' &&
+                          prevMsg['username'] == msg['username'] &&
+                          prevMsg['time'] == msg['time'];
+
+                      bool showTime = nextMsg != null &&
+                          nextMsg['type'] == 'message' &&
+                          (nextMsg['username'] != msg['username'] ||
+                              nextMsg['time'] != msg['time']);
+                      if (index == messages.length - 1) {
+                        showTime = true; // 마지막 메시지는 항상 시간 표시
+                      }
+
+                      return _buildChatBubble(
+                        isMine: msg['isMine'],
+                        username: msg['username'],
+                        message: msg['message'],
+                        time: msg['time'],
+                        showUserNick: !isSameUserAndTime,
+                        showTime: showTime,
+                      );
+                    },
+                  ),
+                ),
+                const Divider(height: 1),
+                _buildInputArea(context),
+              ],
             ),
           ),
-          const Divider(height: 1),
-          _buildInputArea(context),
         ],
       ),
       // ✅ 디버깅용 플로팅 버튼
@@ -144,21 +168,21 @@ class ChatRoomPage extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 80),
         child: FloatingActionButton(
           backgroundColor: Colors.orange,
-            child: Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
               Icon(Icons.phone),
               SizedBox(height: 4),
               Text('디버깅용', style: TextStyle(fontSize: 10)),
-              ],
-            ),
+            ],
+          ),
           onPressed: () async {
             await Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const GroupCallPage()),
             );
           },
-        )
+        ),
       ),
     );
   }
@@ -181,13 +205,14 @@ class ChatRoomPage extends StatelessWidget {
         mainAxisAlignment: isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           // 상대방 메시지일 때 프로필 사진 왼쪽에 배치
-          if (!isMine)
+          if (!isMine && showUserNick)
             const CircleAvatar(
-              radius: 16,
+              radius: 20,
               backgroundImage: NetworkImage('https://via.placeholder.com/150'),
             )
-          else
-            const SizedBox(width: 32), // 내 메시지일 때 여백 추가
+          else if(!isMine)
+            const SizedBox(width: 40) // 프사 없는 메시지에 여백 추가
+          else const SizedBox(width: 20), // 내 메시지일 때는 여백 없음
 
           if (!isMine) const SizedBox(width: 8),
 
@@ -198,7 +223,7 @@ class ChatRoomPage extends StatelessWidget {
                 if (!isMine && showUserNick)
                   Text(username, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
                 Container(
-                  margin: const EdgeInsets.only(top: 4),
+                  margin: const EdgeInsets.only(top: 1),
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: bubbleColor,
@@ -225,7 +250,7 @@ class ChatRoomPage extends StatelessWidget {
                   ),
                   child: Text(message),
                 ),
-                const SizedBox(height: 4),
+                // const SizedBox(height: 4),
                 if (showTime)
                   Text(
                     time,
@@ -236,13 +261,6 @@ class ChatRoomPage extends StatelessWidget {
           ),
 
           if (isMine) const SizedBox(width: 8),
-
-          // 내 메시지일 때 프로필 사진 오른쪽에 배치
-          if (isMine)
-            const CircleAvatar(
-              radius: 16,
-              backgroundImage: NetworkImage('https://via.placeholder.com/150'),
-            ),
         ],
       ),
     );
