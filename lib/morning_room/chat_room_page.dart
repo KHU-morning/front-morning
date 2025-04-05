@@ -28,6 +28,13 @@ class ChatRoomPage extends StatelessWidget {
       'isMine': true
     },
     {
+      'type': 'message',
+      'username': '나',
+      'message': '야호~',
+      'time': 'am 01:01',
+      'isMine': true
+    },
+    {
       'type': 'message','username': 'Moondae123', 'message': '안 돼', 'time': 'am 01:02', 'isMine': false},
     {
       'type': 'message','username': 'Moondae123', 'message': '그럴 순 없어', 'time': 'am 01:02', 'isMine': false},
@@ -122,7 +129,8 @@ class ChatRoomPage extends StatelessWidget {
                   username: msg['username'],
                   message: msg['message'],
                   time: msg['time'],
-                  showUserInfo: !isSameUserAndTime,
+                  showUserNick: !isSameUserAndTime,
+                  showTime: !isSameUserAndTime,
                 );
               },
             ),
@@ -160,63 +168,77 @@ class ChatRoomPage extends StatelessWidget {
     required String username,
     required String message,
     required String time,
-    required bool showUserInfo,
+    required bool showUserNick,
+    required bool showTime,
   }) {
     final bubbleColor = isMine ? const Color(0xFFFFF0B2) : Colors.white;
     final alignment = isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start;
 
-    // final radius = isMine
-    //   ? const BorderRadius.only(
-    //       topLeft: Radius.circular(16),
-    //       topRight: Radius.circular(4),
-    //       bottomLeft: Radius.circular(16),
-    //       bottomRight: Radius.circular(16),
-    //     )
-    //   : const BorderRadius.only(
-    //       topLeft: Radius.circular(4),
-    //       topRight: Radius.circular(16),
-    //       bottomLeft: Radius.circular(16),
-    //       bottomRight: Radius.circular(16),
-    //     );
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start, // 아래쪽 정렬
         mainAxisAlignment: isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          if (!isMine && showUserInfo)
+          // 상대방 메시지일 때 프로필 사진 왼쪽에 배치
+          if (!isMine)
             const CircleAvatar(
               radius: 16,
               backgroundImage: NetworkImage('https://via.placeholder.com/150'),
             )
           else
-            const SizedBox(width: 32),
+            const SizedBox(width: 32), // 내 메시지일 때 여백 추가
+
           if (!isMine) const SizedBox(width: 8),
 
           Flexible(
             child: Column(
               crossAxisAlignment: alignment,
               children: [
-                if (!isMine && showUserInfo)
+                if (!isMine && showUserNick)
                   Text(username, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
                 Container(
                   margin: const EdgeInsets.only(top: 4),
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: bubbleColor,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: isMine
+                        ? const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                            bottomLeft: Radius.circular(16),
+                            bottomRight: Radius.circular(4), // 내 말풍선 오른쪽 살짝 각짐
+                          )
+                        : const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                            bottomLeft: Radius.circular(4), // 상대 말풍선 왼쪽 살짝 각짐
+                            bottomRight: Radius.circular(16),
+                          ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color.fromARGB(100, 128, 128, 128), // 그림자 색상
+                        blurRadius: 1, // 그림자 번짐
+                        offset: const Offset(0, 0), // x축, y축 방향
+                      ),
+                    ],
                   ),
                   child: Text(message),
                 ),
                 const SizedBox(height: 4),
-                if (showUserInfo) Text(time, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                if (showTime)
+                  Text(
+                    time,
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
+                  ),
               ],
             ),
           ),
 
-          if (isMine && showUserInfo) const SizedBox(width: 8),
-          if (isMine && showUserInfo)
+          if (isMine) const SizedBox(width: 8),
+
+          // 내 메시지일 때 프로필 사진 오른쪽에 배치
+          if (isMine)
             const CircleAvatar(
               radius: 16,
               backgroundImage: NetworkImage('https://via.placeholder.com/150'),
@@ -224,7 +246,7 @@ class ChatRoomPage extends StatelessWidget {
         ],
       ),
     );
-    }
+  }
 
   Widget _buildInputArea(BuildContext context) {
     return Container(
