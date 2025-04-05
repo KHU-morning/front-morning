@@ -49,9 +49,9 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF7F7F7),
       appBar: AppBar(
         title: const Text('모닝콜 요청'),
-        backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -272,15 +272,20 @@ class _MorningCallRequestPageState extends State<MorningCallRequestPage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.alarm), label: '모닝콜'),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: '모닝방'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: '마이페이지'),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: (index) => setState(() => _selectedIndex = index),
+      bottomNavigationBar: SizedBox(
+        height: 80,
+        child: BottomNavigationBar(
+          backgroundColor: const Color(0xFFF7F7F7),
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.alarm), label: '모닝콜'),
+            BottomNavigationBarItem(icon: Icon(Icons.people), label: '모닝방'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: '마이페이지'),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: const Color(0xFFFBC15B),
+          onTap: (index) => setState(() => _selectedIndex = index),
+        ),
       ),
     );
   }

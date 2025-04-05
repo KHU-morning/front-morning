@@ -42,16 +42,21 @@ class MorningCallListPage extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 80.0),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 6,
                     childAspectRatio: 0.7,
                   ),
                   itemCount: 10,
                   itemBuilder: (context, index) {
                     return Card(
-                      color: const Color(0xFFFCFCFC),
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(12), // border-radius: 12px
+                      ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -60,7 +65,8 @@ class MorningCallListPage extends StatelessWidget {
                                 CircleAvatar(
                                   radius: 16,
                                   backgroundColor: Colors.blue,
-                                  child: Icon(Icons.person, color: Colors.white, size: 20),
+                                  child: Icon(Icons.person,
+                                      color: Colors.white, size: 20),
                                 ),
                                 SizedBox(width: 8),
                                 Expanded(
@@ -82,7 +88,8 @@ class MorningCallListPage extends StatelessWidget {
                             const SizedBox(height: 1),
                             const Row(
                               children: [
-                                Icon(Icons.calendar_today, size: 18, color: Color(0xFFFBC15B)),
+                                Icon(Icons.calendar_today,
+                                    size: 18, color: Color(0xFFFBC15B)),
                                 SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
@@ -96,7 +103,8 @@ class MorningCallListPage extends StatelessWidget {
                             const SizedBox(height: 8),
                             const Row(
                               children: [
-                                Icon(Icons.access_time, size: 18, color: Color(0xFFFBC15B)),
+                                Icon(Icons.access_time,
+                                    size: 18, color: Color(0xFFFBC15B)),
                                 SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
@@ -110,7 +118,8 @@ class MorningCallListPage extends StatelessWidget {
                             const SizedBox(height: 8),
                             const Row(
                               children: [
-                                Icon(Icons.star, size: 18, color: Color(0xFFFBC15B)),
+                                Icon(Icons.star,
+                                    size: 18, color: Color(0xFFFBC15B)),
                                 SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
@@ -130,28 +139,100 @@ class MorningCallListPage extends StatelessWidget {
                                 onPressed: () {
                                   showDialog(
                                     context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: const Text('모닝콜 수락'),
-                                      content: const Text('이 친구의 모닝콜을 수락하시겠습니까?'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () => Navigator.pop(context),
-                                          child: const Text('취소'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('수락'),
-                                        ),
-                                      ],
+                                    builder: (context) => Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16)),
+                                      insetPadding: const EdgeInsets.symmetric(
+                                          horizontal: 40),
+                                      backgroundColor: const Color(0xFFFCFCFC),                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const SizedBox(height: 24),
+                                          const Text(
+                                            'ZOOZOO08님을 깨워주시겠어요?',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          const Text(
+                                            '날짜 및 시간: 2025.04.07(월) am 07:30\n이유: 중요한 회의가 있음',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: Color(0xFF888888),
+                                              height: 1.4,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 20),
+                                          const Divider(
+                                              height: 1,
+                                              color: Color(0xFFE0E0E0)),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: InkWell(
+                                                  onTap: () =>
+                                                      Navigator.pop(context),
+                                                  child: Container(
+                                                    height: 48,
+                                                    alignment: Alignment.center,
+                                                    child: const Text(
+                                                      '취소',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 15,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 1,
+                                                height: 48,
+                                                color: const Color(0xFFE0E0E0),
+                                              ),
+                                              Expanded(
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                    // 확인 로직 삽입 가능
+                                                  },
+                                                  child: Container(
+                                                    height: 48,
+                                                    alignment: Alignment.center,
+                                                    child: const Text(
+                                                      '확인',
+                                                      style: TextStyle(
+                                                        color:
+                                                            Color(0xFFCA8916),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 15,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFFF8EEAC),
-                                  foregroundColor: Color.fromRGBO(202, 137, 22, 1),
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  backgroundColor: const Color(0xFFF8EEAC),
+                                  foregroundColor:
+                                      const Color.fromRGBO(202, 137, 22, 1),
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
@@ -188,11 +269,10 @@ class MorningCallListPage extends StatelessWidget {
                 ),
               ),
               padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 48,
+              child: Center(
                 child: SizedBox(
                   width: 232,
+                  height: 48,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/morning_call/request');
@@ -202,7 +282,8 @@ class MorningCallListPage extends StatelessWidget {
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shadowColor: Colors.transparent,
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                         side: BorderSide.none,
@@ -218,4 +299,4 @@ class MorningCallListPage extends StatelessWidget {
       ),
     );
   }
-} 
+}
