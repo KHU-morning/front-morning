@@ -11,6 +11,7 @@ class MorningCallListPage extends StatefulWidget {
 }
 
 class _MorningCallListPageState extends State<MorningCallListPage> {
+  bool hasJoinedRoom = true; // 방에 참여했는지 여부
   late Future<List<Map<String, dynamic>>> _wakeRequests;
 
   @override
@@ -21,7 +22,8 @@ class _MorningCallListPageState extends State<MorningCallListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    if (hasJoinedRoom) Navigator.pushNamed(context, '/morning_call/preparing');
+    return Scaffold (
       backgroundColor: const Color(0xFFF7F7F7),
       body: Stack(
         children: [
@@ -260,6 +262,25 @@ class _MorningCallListPageState extends State<MorningCallListPage> {
             ),
           ),
         ],
+      ),
+      
+      // ✅ 디버깅용 플로팅 버튼
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 80),
+        child: FloatingActionButton(
+          backgroundColor: Colors.orange,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.phone),
+              SizedBox(height: 4),
+              Text('디버깅용', style: TextStyle(fontSize: 10)),
+            ],
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, '/morning_call/preparing');
+          },
+        ),
       ),
     );
   }
