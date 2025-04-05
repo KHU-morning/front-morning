@@ -5,6 +5,7 @@ import 'auth/register_page.dart';
 import 'home/home_page.dart';
 import 'morning_room/morning_room_page.dart';
 import 'morning_call/morning_call_request_page.dart';
+import 'morning_call/preparing_wake_page.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
         '/morning_call/request': (context) => const MorningCallRequestPage(),
+        '/morning_call/preparing': (context) => const PreparingWakePage(),
         '/morning_room': (context) => const MorningRoomPage(),
       },
     );
