@@ -3,8 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:k_html_flutter/mypage/statistics_detail_screen.dart';
+import 'package:Khu_morning/mypage/statistics_detail_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import '../api/my_page.dart';
 
 class MyPageScreen extends StatefulWidget {
   const MyPageScreen({super.key});
@@ -23,31 +25,20 @@ class _MyPageScreenState extends State<MyPageScreen> {
   @override
   void initState() {
     super.initState();
-    fetchProfileData();
+    _loadMyPageData(); // 비동기 함수 호출
   }
 
-  Future<void> fetchProfileData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
+  Future<void> _loadMyPageData() async {
+    try {
+      final profileData = await fetchMyProfile(); // 이름 변경된 함수 사용
+      final wakeDates = await fetchMyWakeSummary();
 
-    if (token == null) return;
-
-    final headers = {'Authorization': 'Bearer $token'};
-
-    final profileRes =
-        await http.get(Uri.parse('http://127.0.0.1:8000/me'), headers: headers);
-    final recordRes = await http.get(
-        Uri.parse('http://127.0.0.1:8000/me/wake-records'),
-        headers: headers);
-
-    if (profileRes.statusCode == 200 && recordRes.statusCode == 200) {
       setState(() {
-        profile = jsonDecode(profileRes.body);
-        successDates = (jsonDecode(recordRes.body) as List)
-            .where((e) => e['success'] == true)
-            .map<String>((e) => e['date'])
-            .toList();
+        profile = profileData;
+        successDates = wakeDates.cast<String>();
       });
+    } catch (e) {
+      print('마이페이지 데이터 불러오기 실패: $e');
     }
   }
 
@@ -102,7 +93,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                     Text(
                       profile?['username'] ?? '',
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16, fontFamily: 'SpoqaHanSans'),
                     ),
                     Text(
                       '${profile?['name']}  ${profile?['department']}',
