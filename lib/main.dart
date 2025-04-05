@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'auth/login_page.dart';
 import 'auth/register_page.dart';
 import 'home/home_page.dart';
+import 'morning_room/morning_room_page.dart';
 import 'morning_call/morning_call_request_page.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
         '/morning_call/request': (context) => const MorningCallRequestPage(),
+        '/morning_room': (context) => const MorningRoomPage(),
       },
     );
   }

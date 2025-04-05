@@ -20,6 +20,7 @@ class _CreateMorningRoomPageState extends State<CreateMorningRoomPage> {
 
   void _openDatePicker() async {
     showModalBottomSheet(
+      backgroundColor: Colors.white,
       context: context,
       isScrollControlled: true,
       builder: (context) {
@@ -46,7 +47,7 @@ class _CreateMorningRoomPageState extends State<CreateMorningRoomPage> {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFFF0B2),
+                  backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -91,8 +92,9 @@ class _CreateMorningRoomPageState extends State<CreateMorningRoomPage> {
                       title: Row(
                         children: [
                           const CircleAvatar(
-                            radius: 10,
-                            backgroundColor: Colors.yellow,
+                            child: Icon(Icons.person, color: Colors.white, size: 20),
+                            radius: 12,
+                            backgroundColor: Color(0xFFF8EEAC),
                           ),
                           const SizedBox(width: 12),
                           Text(friend['name'] as String),
@@ -144,7 +146,8 @@ class _CreateMorningRoomPageState extends State<CreateMorningRoomPage> {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('이대로 모닝방을 생성하시겠어요?'),
+        title: const Text('이대로 모닝방을 생성하시겠어요?', 
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         content: Text(
           '공개 여부: ${isPublic ? "공개" : "비공개"}\n'
           '날짜 및 시간: ${DateFormat('yyyy.MM.dd (E) HH:mm', 'ko_KR').format(selectedDate)}\n'
@@ -157,7 +160,7 @@ class _CreateMorningRoomPageState extends State<CreateMorningRoomPage> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushNamed(context, '/morning_room'); // 방 종료 후 모닝룸으로 이동
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('모닝방 생성 완료')),
               );
