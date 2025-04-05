@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../widgets/calendar_sheet.dart';
 
 class StatisticsDetailScreen extends StatelessWidget {
   final DateTime date;
@@ -10,6 +11,30 @@ class StatisticsDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatted = DateFormat('yyyy년 M월 d일').format(date);
     final isSuccess = date.day % 2 == 1; // 예시: 홀수일 성공, 짝수일 실패
+
+    void _showDatePicker(BuildContext context) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (context) {
+          return CalendarSheet(
+            selectedDate: date,
+            onDateSelected: (selectedDate) {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => StatisticsDetailScreen(date: selectedDate),
+                ),
+              );
+            },
+          );
+        },
+      );
+    }
 
     return Scaffold(
       backgroundColor: Color(0xFFF7F7F7),
@@ -27,7 +52,11 @@ class StatisticsDetailScreen extends StatelessWidget {
               Text(formatted,
                   style: const TextStyle(
                       fontSize: 24, fontWeight: FontWeight.bold)),
-              const Icon(Icons.calendar_today_outlined, size: 18),
+              const SizedBox(width: 6),
+              IconButton(
+                icon: const Icon(Icons.calendar_today_outlined, size: 20),
+                onPressed: () => _showDatePicker(context),
+              ),
             ],
           ),
           const SizedBox(height: 23),
