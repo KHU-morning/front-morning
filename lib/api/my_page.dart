@@ -5,10 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<Map<String, dynamic>> fetchMyProfile() async {
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('access_token');
-  const backendUrl = 'http://172.21.2.130:8000';
+  const backendUrl = 'https://port-0-back-morning-m94ntlcqbc256101.sel4.cloudtype.app/';
 
   final response = await http.get(
-    Uri.parse('http://172.21.2.130:8000/me'),
+    Uri.parse('${backendUrl}me'),
     headers: {'Authorization': 'Bearer $token'},
   );
 
@@ -22,9 +22,10 @@ Future<Map<String, dynamic>> fetchMyProfile() async {
 Future<List<Map<String, dynamic>>> fetchMyWakeSummary() async {
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('access_token');
+  const backendUrl = 'https://port-0-back-morning-m94ntlcqbc256101.sel4.cloudtype.app/';
 
   final response = await http.get(
-    Uri.parse('http://172.21.2.130:8000/me/wake-records'),
+    Uri.parse('${backendUrl}me/wake-records'),
     headers: {'Authorization': 'Bearer $token'},
   );
 

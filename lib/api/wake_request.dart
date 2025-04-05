@@ -10,7 +10,7 @@ Future<bool> createWakeRequest({
 }) async {
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('access_token');
-  const backendUrl = 'http://172.21.2.130:8000';
+  const backendUrl = 'https://port-0-back-morning-m94ntlcqbc256101.sel4.cloudtype.app/';
 
   if (token == null) return false;
 

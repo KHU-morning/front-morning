@@ -1,4 +1,6 @@
+import 'package:Khu_morning/api/jwt.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './group_call/group_call_page.dart';
 import './chat_room_info.dart';
 
@@ -83,14 +85,20 @@ class ChatRoomPage extends StatelessWidget {
       'user': 'inamin419',
     },
   ];
+  
+  Future<String?> getJwtToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('jwt_token');
+  }
 
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 3), () async {
       await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const GroupCallPage()),
-      );
+          context,
+          MaterialPageRoute(
+              builder: (_) => const GroupCallPage())
+                  );
     });
 
     return Scaffold(

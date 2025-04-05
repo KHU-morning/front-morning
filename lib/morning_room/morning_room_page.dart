@@ -134,7 +134,6 @@ class _MorningRoomPageState extends State<MorningRoomPage> {
                   ),
                   const SizedBox(height: 8),
                   ...morningRooms.map((room) {
-                    print("rr${room}");
                     return MorningRoomCard(
                       username: room['created_by'],
                       date: room['wake_date'],
@@ -223,7 +222,7 @@ class MorningRoomCard extends StatelessWidget {
                 const Icon(Icons.access_time,
                     size: 20, color: Color(0xFFFBC15B)),
                 const SizedBox(width: 8),
-                Text(time),
+                Text('am $time'),
               ],
             ),
             const SizedBox(height: 12),

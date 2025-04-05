@@ -86,9 +86,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
             children: [
                     CircleAvatar(
                     radius: 28,
-                    backgroundImage: AssetImage('assets/img/${profile?['username']}.png').assetName != null
-                      ? AssetImage('assets/img/${profile?['username']}.png')
-                      : AssetImage('assets/img/default_profile.png') as ImageProvider,
+                    backgroundImage: AssetImage('img/${profile?['username']}.png').assetName != null
+                      ? AssetImage('img/${profile?['username']}.png')
+                      : AssetImage('img/default_profile.png') as ImageProvider,
                     ),
               const SizedBox(width: 12),
               Expanded(

@@ -79,8 +79,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    String currentLogo = 'assets/img/flash$logoStep.svg';
-    String previousLogo = 'assets/img/flash${(logoStep - 1).clamp(1, 9)}.svg';
+    String currentLogo = 'img/flash$logoStep.svg';
+    String previousLogo = 'img/flash${(logoStep - 1).clamp(1, 9)}.svg';
 
     return Scaffold(
       backgroundColor: showButtons ? const Color(0xFFF7F7F7) : const Color(0xFFFBC15B),

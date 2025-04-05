@@ -5,13 +5,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<List<Map<String, dynamic>>> fetchMorningRoomList() async {
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('access_token');
+  const backendUrl = 'https://port-0-back-morning-m94ntlcqbc256101.sel4.cloudtype.app/';
 
   if (token == null) {
     throw Exception('토큰이 없습니다.');
   }
 
   final response = await http.get(
-    Uri.parse('http://127.0.0.1:8000/rooms'),
+    Uri.parse('${backendUrl}rooms'),
     headers: {
       'Authorization': 'Bearer $token',
     },
@@ -26,7 +27,20 @@ Future<List<Map<String, dynamic>>> fetchMorningRoomList() async {
 }
 
 Future<Map<String, dynamic>> fetchRoomDetail(String roomId) async {
-  final response = await http.get(Uri.parse('http://localhost:8000/rooms/$roomId'));
+  final prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString('access_token');
+  const backendUrl = 'https://port-0-back-morning-m94ntlcqbc256101.sel4.cloudtype.app/';
+
+  if (token == null) {
+    throw Exception('토큰이 없습니다.');
+  }
+
+  final response = await http.get(
+    Uri.parse('${backendUrl}rooms/$roomId'),
+    headers: {
+      'Authorization': 'Bearer $token',
+    },
+  );
 
   if (response.statusCode == 200) {
     return jsonDecode(utf8.decode(response.bodyBytes));

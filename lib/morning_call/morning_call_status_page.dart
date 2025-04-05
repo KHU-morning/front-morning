@@ -64,7 +64,7 @@ class _FindingView extends StatelessWidget {
               const SizedBox(height: 40),
               Center(
                 child: Image.asset(
-                  'assets/img/finding.png', // 여기에 이미지 경로 설정
+                  'img/finding.png', // 여기에 이미지 경로 설정
                   width: 160,
                   height: 160,
                 ),
