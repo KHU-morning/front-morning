@@ -1,3 +1,4 @@
+import 'package:Khu_morning/morning_room/group_call/alarm.dart';
 import 'package:flutter/material.dart';
 import '../morning_call/morning_call_list_page.dart';
 import '../morning_room/morning_room_page.dart';
@@ -18,6 +19,16 @@ class _HomePageState extends State<HomePage> {
     const MorningRoomPage(),
     const MyPageScreen(),
   ];
+  
+  @override
+  void initState() {
+    super.initState();
+
+    // 👇 알람 시간 예약
+    final now = DateTime.now();
+    final scheduled = DateTime(now.year, now.month, now.day, 4, 9);
+    AlarmScheduler().scheduleAlarm(scheduled);
+  }
 
   @override
   Widget build(BuildContext context) {

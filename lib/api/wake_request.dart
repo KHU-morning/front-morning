@@ -10,11 +10,12 @@ Future<bool> createWakeRequest({
 }) async {
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('access_token');
+  const backendUrl = 'http://172.21.2.130:8000';
 
   if (token == null) return false;
 
   final response = await http.post(
-    Uri.parse('http://127.0.0.1:8000/wake-requests'),
+    Uri.parse('$backendUrl/wake-requests'),
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
