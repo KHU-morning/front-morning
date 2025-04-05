@@ -7,7 +7,7 @@ import 'morning_call/morning_call_request_page.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // 비동기 작업 전에 필수!
+  WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('ko_KR', null);
   runApp(const MyApp());
 }
@@ -38,35 +38,50 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
   int logoStep = 1;
   bool showButtons = false;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
-    _startLogoAnimation();
+
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_fadeController);
+
+    _startSequence();
   }
 
-  void _startLogoAnimation() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    setState(() => logoStep = 2);
-    await Future.delayed(const Duration(milliseconds: 500));
-    setState(() => logoStep = 3);
-    await Future.delayed(const Duration(milliseconds: 600));
-    setState(() => logoStep = 4);
-    await Future.delayed(const Duration(milliseconds: 400));
+  void _startSequence() async {
+    for (int i = 2; i <= 9; i++) {
+      _fadeController.reset();
+      setState(() => logoStep = i);
+      _fadeController.forward();
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
+
+    await Future.delayed(const Duration(milliseconds: 200));
     setState(() => showButtons = true);
   }
 
   @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    String logoAsset = 'assets/img/plash$logoStep.svg';
+    String currentLogo = 'assets/img/plash$logoStep.svg';
+    String previousLogo = 'assets/img/plash${(logoStep - 1).clamp(1, 9)}.svg';
 
     return Scaffold(
-      backgroundColor: showButtons
-          ? const Color(0xFFF7F7F7) // 버튼 등장 후 배경색
-          : const Color(0xFFFBC15B), // 초기 로딩 중 배경색
+      backgroundColor: showButtons ? const Color(0xFFF7F7F7) : const Color(0xFFFBC15B),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -85,72 +100,88 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                     ),
                     const SizedBox(height: 80),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child: SvgPicture.asset(
-                        logoAsset,
-                        key: ValueKey<String>(logoAsset),
-                        width: 180,
-                        height: 180,
+                    SizedBox(
+                      width: 180,
+                      height: 180,
+                      child: Stack(
+                        children: [
+                          SvgPicture.asset(previousLogo),
+                          FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: SvgPicture.asset(currentLogo),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 10),
                     const Spacer(),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/login'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFDF0AC),
-                          foregroundColor: const Color(0xFFCA8916),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(32),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: const Text(
-                          '로그인',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 16),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/register'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFFC84E),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(32),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: const Text(
-                          '회원가입',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 16),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 32),
+                    _buildButtons(context),
                   ],
                 )
               : Center(
-                  child: SvgPicture.asset(
-                    logoAsset,
+                  child: SizedBox(
                     width: 180,
                     height: 180,
+                    child: Stack(
+                      children: [
+                        SvgPicture.asset(previousLogo),
+                        FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: SvgPicture.asset(currentLogo),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
         ),
       ),
+    );
+  }
+
+  Widget _buildButtons(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton(
+            onPressed: () => Navigator.pushNamed(context, '/login'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFDF0AC),
+              foregroundColor: const Color(0xFFCA8916),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(32),
+              ),
+              elevation: 0,
+            ),
+            child: const Text(
+              '로그인',
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton(
+            onPressed: () => Navigator.pushNamed(context, '/register'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFFC84E),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(32),
+              ),
+              elevation: 0,
+            ),
+            child: const Text(
+              '회원가입',
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+            ),
+          ),
+        ),
+        const SizedBox(height: 32),
+      ],
     );
   }
 }
