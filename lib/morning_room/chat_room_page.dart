@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './group_call/group_call_page.dart';
+import './chat_room_info.dart';
 
 class ChatRoomPage extends StatelessWidget {
   final String roomId;
@@ -23,6 +24,13 @@ class ChatRoomPage extends StatelessWidget {
       'type': 'message',
       'username': '나',
       'message': '내일 9시에 일어나야 하는데\n이대로 가면 우리 미션 실패하면 어쩌지...',
+      'time': 'am 01:01',
+      'isMine': true
+    },
+    {
+      'type': 'message',
+      'username': '나',
+      'message': '야호~',
       'time': 'am 01:01',
       'isMine': true
     },
@@ -65,7 +73,26 @@ class ChatRoomPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 300),
+                  pageBuilder: (_, __, ___) => const RoomInfoPage(),
+                  transitionsBuilder: (_, animation, __, child) {
+                    final offsetAnimation = Tween<Offset>(
+                      begin: const Offset(1.0, 0.0), // 👉 오른쪽에서 시작
+                      end: Offset.zero,
+                    ).animate(animation);
+
+                    return SlideTransition(position: offsetAnimation, child: child);
+                  },
+                ),
+              );
+            },
+            icon: const Icon(Icons.menu)
+          ),
         ],
       ),
       body: Column(
@@ -102,7 +129,8 @@ class ChatRoomPage extends StatelessWidget {
                   username: msg['username'],
                   message: msg['message'],
                   time: msg['time'],
-                  showUserInfo: !isSameUserAndTime,
+                  showUserNick: !isSameUserAndTime,
+                  showTime: !isSameUserAndTime,
                 );
               },
             ),
@@ -112,15 +140,25 @@ class ChatRoomPage extends StatelessWidget {
         ],
       ),
       // ✅ 디버깅용 플로팅 버튼
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.orange,
-        child: const Icon(Icons.phone),
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const GroupCallPage()),
-          );
-        },
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 80),
+        child: FloatingActionButton(
+          backgroundColor: Colors.orange,
+            child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.phone),
+              SizedBox(height: 4),
+              Text('디버깅용', style: TextStyle(fontSize: 10)),
+              ],
+            ),
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const GroupCallPage()),
+            );
+          },
+        )
       ),
     );
   }
@@ -130,63 +168,77 @@ class ChatRoomPage extends StatelessWidget {
     required String username,
     required String message,
     required String time,
-    required bool showUserInfo,
+    required bool showUserNick,
+    required bool showTime,
   }) {
     final bubbleColor = isMine ? const Color(0xFFFFF0B2) : Colors.white;
     final alignment = isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start;
 
-    // final radius = isMine
-    //   ? const BorderRadius.only(
-    //       topLeft: Radius.circular(16),
-    //       topRight: Radius.circular(4),
-    //       bottomLeft: Radius.circular(16),
-    //       bottomRight: Radius.circular(16),
-    //     )
-    //   : const BorderRadius.only(
-    //       topLeft: Radius.circular(4),
-    //       topRight: Radius.circular(16),
-    //       bottomLeft: Radius.circular(16),
-    //       bottomRight: Radius.circular(16),
-    //     );
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start, // 아래쪽 정렬
         mainAxisAlignment: isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          if (!isMine && showUserInfo)
+          // 상대방 메시지일 때 프로필 사진 왼쪽에 배치
+          if (!isMine)
             const CircleAvatar(
               radius: 16,
               backgroundImage: NetworkImage('https://via.placeholder.com/150'),
             )
           else
-            const SizedBox(width: 32),
+            const SizedBox(width: 32), // 내 메시지일 때 여백 추가
+
           if (!isMine) const SizedBox(width: 8),
 
           Flexible(
             child: Column(
               crossAxisAlignment: alignment,
               children: [
-                if (!isMine && showUserInfo)
+                if (!isMine && showUserNick)
                   Text(username, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
                 Container(
                   margin: const EdgeInsets.only(top: 4),
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: bubbleColor,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: isMine
+                        ? const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                            bottomLeft: Radius.circular(16),
+                            bottomRight: Radius.circular(4), // 내 말풍선 오른쪽 살짝 각짐
+                          )
+                        : const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                            bottomLeft: Radius.circular(4), // 상대 말풍선 왼쪽 살짝 각짐
+                            bottomRight: Radius.circular(16),
+                          ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color.fromARGB(100, 128, 128, 128), // 그림자 색상
+                        blurRadius: 1, // 그림자 번짐
+                        offset: const Offset(0, 0), // x축, y축 방향
+                      ),
+                    ],
                   ),
                   child: Text(message),
                 ),
                 const SizedBox(height: 4),
-                if (showUserInfo) Text(time, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                if (showTime)
+                  Text(
+                    time,
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
+                  ),
               ],
             ),
           ),
 
-          if (isMine && showUserInfo) const SizedBox(width: 8),
-          if (isMine && showUserInfo)
+          if (isMine) const SizedBox(width: 8),
+
+          // 내 메시지일 때 프로필 사진 오른쪽에 배치
+          if (isMine)
             const CircleAvatar(
               radius: 16,
               backgroundImage: NetworkImage('https://via.placeholder.com/150'),
@@ -194,43 +246,47 @@ class ChatRoomPage extends StatelessWidget {
         ],
       ),
     );
-    }
+  }
 
   Widget _buildInputArea(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       color: Colors.white,
-      child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  hintText: '메시지를 입력해주세요',
-                  filled: true,
-                  fillColor: const Color(0xFFF2F2F2),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide.none,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        child: SafeArea(
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    hintText: '메시지를 입력해주세요',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    filled: true,
+                    fillColor: const Color(0xFFF2F2F2),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide.none,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFFFB74D),
+              const SizedBox(width: 8),
+              Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFFFB74D),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_upward, color: Colors.white),
+                  onPressed: () {
+                    // TODO: 보내기 기능
+                  },
+                ),
               ),
-              child: IconButton(
-                icon: const Icon(Icons.arrow_upward, color: Colors.white),
-                onPressed: () {
-                  // TODO: 보내기 기능
-                },
-              ),
-            )
-          ],
+            ],
+          ), 
         ),
       ),
     );

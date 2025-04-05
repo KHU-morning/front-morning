@@ -5,7 +5,7 @@ import 'chat_room_page.dart';
 class MorningRoomPage extends StatelessWidget {
   const MorningRoomPage({super.key});
 
-  final bool hasJoinedRoom = false; // 참여 중인 모닝방 여부 (테스트 시 true/false 바꿔보면 됨)
+  final bool hasJoinedRoom = true; // 참여 중인 모닝방 여부 (테스트 시 true/false 바꿔보면 됨)
 
   void _navigateToCreateRoom(BuildContext context) {
     Navigator.push(
